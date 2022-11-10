@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RelatorioEstoque" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="15" uuid="251c9320-a497-4db0-b645-9920b8cbc621">
+	<property name="template.type" value="columnar"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" forecolor="#000000" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman"/>
+	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="parameter1" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select * from estoque inner join pecas on estoque.`Pecas_idPecas` = pecas.`idPecas`]]>
+	</queryString>
+	<field name="idEstoque" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Estoque_minimo" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Estoque_maximo" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Quant_em_estoque" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Valor_em_estoque" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Valor_compra_unitario" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Margem_lucro" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Valor_venda_unitario" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Pecas_idPecas" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="data_fabr" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="data_vencimento" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="unidade_medida" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="idPecas" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nome_peca" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="aplicacao" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fabricante_pecas_idfabricante_pecas" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Cod_Barras" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="variable1" class="java.lang.String"/>
+	<group name="Pecas_idPecas">
+		<groupExpression><![CDATA[$F{Pecas_idPecas}]]></groupExpression>
+	</group>
+	<group name="nome_peca">
+		<groupExpression><![CDATA[$F{nome_peca}]]></groupExpression>
+	</group>
+	<title>
+		<band height="275" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" x="4" y="40" width="551" height="51" uuid="1fe547ee-6b3b-4064-98ab-5396c4ff91f9"/>
+				<textElement textAlignment="Center">
+					<font size="35" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Relatório de Estoque]]></text>
+			</staticText>
+			<image>
+				<reportElement x="8" y="113" width="193" height="126" uuid="7f0e7bfc-179b-4911-b622-00b8d6c2bccb"/>
+				<imageExpression><![CDATA["Estoque.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="SubTitle" x="317" y="211" width="236" height="18" uuid="e2df42a4-55f8-47c1-8e14-c41a312e0851"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo Relatório:  Resumo Geral]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" x="8" y="91" width="545" height="22" uuid="f8462055-c550-42cb-a4c7-bcd6cf7b94de"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MACEDO SUPERMERCADOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" mode="Opaque" x="0" y="250" width="555" height="21" backcolor="#9DB1B8" uuid="4e2884cc-736a-473c-8f19-08d20a9bad81"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" x="10" y="250" width="69" height="21" forecolor="#FFFFFF" uuid="d597e3d4-a553-4e4f-8747-f1e281c44a0a"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" x="91" y="250" width="204" height="21" forecolor="#FFFFFF" uuid="30c0f300-d21d-4dd3-84ca-41b4a10e6ed1"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Produto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" x="295" y="250" width="69" height="21" forecolor="#FFFFFF" uuid="de3762b1-278e-4960-a5e4-33b34c84c7d0"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estoque]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" x="367" y="250" width="83" height="21" forecolor="#FFFFFF" uuid="8dc159be-886f-4b70-ab28-5b933d80deb1"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VL Venda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" x="450" y="250" width="103" height="21" forecolor="#FFFFFF" uuid="189f3d20-ffd1-4d9b-83ee-5a9c7d570c1d"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Categoria]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="24" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" positionType="Float" x="295" y="0" width="72" height="20" uuid="6122f24f-619c-4f4d-8a68-2d41b692c831"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="false" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Quant_em_estoque}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" positionType="Float" x="367" y="0" width="83" height="20" uuid="62d85ef4-5502-49c3-819e-82f0c15be246"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="false" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Valor_venda_unitario}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" positionType="Float" x="450" y="0" width="103" height="20" uuid="f69f86a7-7347-4bb7-90c6-5680228ae182"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="false" pdfFontName="Times-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{aplicacao}]]></textFieldExpression>
+			</textField>
+			<elementGroup/>
+			<textField>
+				<reportElement x="91" y="0" width="204" height="20" uuid="b42226b1-ba9a-4ecc-b182-92bc3143c869"/>
+				<textElement>
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome_peca}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="8" y="0" width="83" height="20" uuid="1c86ad41-c54b-4d4b-b496-c9c10bf9fd84"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Pecas_idPecas}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="13" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="2" y="0" width="555" height="13" forecolor="#D0B48E" backcolor="#9DB1B8" uuid="ba0c02f3-91dd-46ec-9705-bd3735732a9e"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="513" y="-1" width="40" height="13" forecolor="#FFFFFF" uuid="2442955d-7958-45f1-9b82-674c0d72e676"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="433" y="-1" width="80" height="13" forecolor="#FFFFFF" uuid="2c31da50-6f65-491c-bb28-0f9f2f508b0f"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement style="Column header" x="2" y="0" width="197" height="13" forecolor="#FFFFFF" uuid="33fb179d-0231-48e5-b595-5685304df660"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+</jasperReport>

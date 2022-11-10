@@ -1,0 +1,5918 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package View;
+
+import Controller.ControleVenda;
+import Model.BD.Conecta_Banco;
+import Model.BO.VendasBO;
+import Model.DAO.VendasPecasDAO;
+import Model.VO.CadastroAutomovelVO;
+import Model.VO.Cadastro_ClienteVO;
+import Model.VO.Cadastro_FuncionarioVO;
+import Model.VO.Dados_iniciaisVO;
+import Model.VO.EstoqueVO;
+import Model.VO.Estoque_PecasVO;
+import Model.VO.ItensVenda_Pecas;
+import Model.VO.ModeloTabela;
+import Model.VO.SCadastro_PecasVO;
+import Model.VO.VItens_VendaVO;
+import Model.VO.VendasPecasVO;
+import Model.VO.VendasVO;
+import Model.VO.VendedorVO;
+import View.JI_Cliente.Frm_ClientePesquisa;
+import Model.VO.Estoque_ProdutosVO;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+
+
+/**
+ *
+ * @author Lucas
+ */
+public class JI_VendaPecas extends javax.swing.JInternalFrame {
+
+    VendasBO VendasBO = new VendasBO();
+    
+    Cadastro_ClienteVO ModCliente = new Cadastro_ClienteVO();
+    VendedorVO ModVendedor = new VendedorVO();
+   
+    Cadastro_FuncionarioVO ModFuncionario = new Cadastro_FuncionarioVO();
+    
+    SCadastro_PecasVO ModPecas = new SCadastro_PecasVO();
+    Estoque_ProdutosVO ModEstoque2 = new Estoque_ProdutosVO();
+    
+    EstoqueVO ModEstoque = new EstoqueVO();
+    
+    Dados_iniciaisVO Dados_Iniciais = new Dados_iniciaisVO();
+    
+    ControleVenda ControlVenda = new ControleVenda();
+    int Cod_Venda;
+   
+    Conecta_Banco Conexao = new Conecta_Banco();
+    Conecta_Banco ConexaoItem = new Conecta_Banco();
+    Conecta_Banco ConexaoLiquido = new Conecta_Banco();
+
+VendasPecasVO ModVenda_Pecas = new VendasPecasVO();
+ItensVenda_Pecas ModItens_Pecas = new ItensVenda_Pecas();
+
+    Estoque_PecasVO ModPesquisa_Estoque = new Estoque_PecasVO();
+
+    Float Res;
+    
+VendasPecasDAO ControlVendas_Pecas = new VendasPecasDAO();
+    private Object Date_Sistema;
+    
+     Locale localeUS = new Locale("en", "US");
+     Locale LocaleBR = new Locale("pt", "BR");         
+
+    
+    /**
+     * Creates new form NewJInternalFrame
+     */
+    public JI_VendaPecas(String Venda_User) {
+        initComponents();
+
+        Iniciar_ClientesDiversos();
+        
+        jLabelUser.setText(Venda_User);
+
+        Identificar_Vendedor();
+        
+        Cliente_Inicial();
+        
+        Preencher_FormaPagamento();
+        Preencher_DiaCartao();
+        Preencher_AnoCartao();
+        
+        //Data e Hora
+        Hora_Atual_Sistema();        
+        jFormattedTextFieldData_Hora.setEditable(false);
+        
+              //Desabilitar Botões
+        jButtonAtualizar_Registro.setEnabled(false);
+        jButtonExcluir.setEnabled(false);
+        jButtonAnterior.setEnabled(false);
+        jButtonProximo.setEnabled(false);
+        jButtonPesquisar.setEnabled(false);
+   
+        jTextFieldcodigovenda.setEnabled(false);
+        
+        jTextFieldValor_Pagar.setEditable(false);
+        
+       // jPanelCartao.setVisible(false);
+        //jPanelPrazo.setVisible(false);
+        
+        
+        
+        //Pagamento A Prazo e Cartão
+        jTextFieldVL_Entrada.setEnabled(false);
+        jTextFieldJuros.setEnabled(false);
+        jSpinnerParcelas.setEnabled(false);
+        jTextFieldTotal_Prazo.setEnabled(false);
+        jTextFieldvalorparcelas.setEnabled(false);
+        
+//        jSpinnerdiavencimento.setEnabled(false);
+        jTextField1Parcela.setEnabled(false);
+        jTextField2Parcela.setEnabled(false);
+        jTextField3Parcela.setEnabled(false);
+        
+        jLabelvlparcelas.setEnabled(false);
+        jLabeldiadevencimento.setEnabled(false);
+        jLabel1parcela.setEnabled(false);
+        jLabel2parcela.setEnabled(false);
+        jLabel3parcela.setEnabled(false);
+        
+        jLabelTipo_Pagamento.setEnabled(false);
+        jLabelQuant_Parcelas.setEnabled(false);
+        jLabelTotal_Prazo.setEnabled(false);
+        jLabelVL_entrada.setEnabled(false);
+        jLabelJuros.setEnabled(false);
+
+    
+        jTextFieldTroco.setEditable(false);
+        
+        //Desabilitar botões venda        
+        jButtonRemover.setEnabled(false);
+        jButtonAtualizar_Item.setEnabled(false);
+        
+    }
+
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel2 = new javax.swing.JPanel();
+        jButtonNovo = new javax.swing.JButton();
+        jButtonExcluir = new javax.swing.JButton();
+        jButtonAnterior = new javax.swing.JButton();
+        jButtonProximo = new javax.swing.JButton();
+        jButtonLimpar = new javax.swing.JButton();
+        jButtonPesquisar = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jButtonSair = new javax.swing.JButton();
+        jButtonAtualizar_Registro = new javax.swing.JButton();
+        jButtonEntrar_sair_Modo_Pesquisa = new javax.swing.JButton();
+        jLabel27 = new javax.swing.JLabel();
+        jLabelUser = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jTextFieldquantidade = new javax.swing.JTextField();
+        jLabel19 = new javax.swing.JLabel();
+        jTextFieldvalortotal_parcial = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
+        jTextFielddesconto = new javax.swing.JTextField();
+        jLabel21 = new javax.swing.JLabel();
+        jTextFieldvalorfinal = new javax.swing.JTextField();
+        jPanel8 = new javax.swing.JPanel();
+        jButtonAtualizar_Item = new javax.swing.JButton();
+        jButtonRemover = new javax.swing.JButton();
+        jButtonAdicionar = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jPanel4 = new javax.swing.JPanel();
+        jTextFieldcodigocliente = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jTextFieldnomecliente = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        jTextFieldcpfcliente = new javax.swing.JTextField();
+        jButtonPesquisaCliente = new javax.swing.JButton();
+        jButtonPesquisaCliente1 = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTabletabelaItensVenda = new javax.swing.JTable();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jTextFieldDinheiro = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        jTextFieldTroco = new javax.swing.JTextField();
+        jLabel30 = new javax.swing.JLabel();
+        jTextFieldcodigovenda = new javax.swing.JTextField();
+        jLabel31 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        jTextFieldCod_Vendedor = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jTextFieldNome_Vendedor = new javax.swing.JTextField();
+        jButtonPesquisa_Vendedor = new javax.swing.JButton();
+        jPanel10 = new javax.swing.JPanel();
+        jTextFieldNomePeca = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jTextFieldCod_Peca = new javax.swing.JTextField();
+        jButtonPesquisarPecas = new javax.swing.JButton();
+        jLabel17 = new javax.swing.JLabel();
+        jTextFieldprecounitario = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jTextFieldDisp_Estoque = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jButtonPesquisarPecas1 = new javax.swing.JButton();
+        jPanel11 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        jTextFieldValor_Pagar = new javax.swing.JTextField();
+        jPanel12 = new javax.swing.JPanel();
+        jLabel29 = new javax.swing.JLabel();
+        jComboBoxCondicaoPagamento = new javax.swing.JComboBox();
+        jPanelPrazo = new javax.swing.JPanel();
+        jLabelTipo_Pagamento = new javax.swing.JLabel();
+        jLabelVL_entrada = new javax.swing.JLabel();
+        jTextFieldVL_Entrada = new javax.swing.JTextField();
+        jLabelJuros = new javax.swing.JLabel();
+        jTextFieldJuros = new javax.swing.JTextField();
+        jLabelQuant_Parcelas = new javax.swing.JLabel();
+        jSpinnerParcelas = new javax.swing.JSpinner();
+        jLabelTotal_Prazo = new javax.swing.JLabel();
+        jTextFieldTotal_Prazo = new javax.swing.JTextField();
+        jLabelvlparcelas = new javax.swing.JLabel();
+        jTextFieldvalorparcelas = new javax.swing.JTextField();
+        jLabeldiadevencimento = new javax.swing.JLabel();
+        jLabel1parcela = new javax.swing.JLabel();
+        jLabel2parcela = new javax.swing.JLabel();
+        jLabel3parcela = new javax.swing.JLabel();
+        jTextField1Parcela = new javax.swing.JTextField();
+        jTextField2Parcela = new javax.swing.JTextField();
+        jTextField3Parcela = new javax.swing.JTextField();
+        jButtonFinalizar_Venda = new javax.swing.JButton();
+        jPanel9 = new javax.swing.JPanel();
+        jLabel33 = new javax.swing.JLabel();
+        jTextFieldvalor_venda = new javax.swing.JTextField();
+        jTextFieldDenconto_total = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jFormattedTextFieldData_Hora = new javax.swing.JFormattedTextField();
+        jPanel13 = new javax.swing.JPanel();
+        jLabel22 = new javax.swing.JLabel();
+        jTextFieldSituacao = new javax.swing.JTextField();
+
+        setIconifiable(true);
+        setMaximizable(true);
+        setTitle("Venda de Produtos");
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jButtonNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/icones/new-file-btn.png"))); // NOI18N
+        jButtonNovo.setToolTipText("Inserir Registro");
+        jButtonNovo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonNovo.setContentAreaFilled(false);
+        jButtonNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonNovoActionPerformed(evt);
+            }
+        });
+
+        jButtonExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/icones/Sign_Close_Icon_48.png"))); // NOI18N
+        jButtonExcluir.setToolTipText("Remover Registro");
+        jButtonExcluir.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonExcluirActionPerformed(evt);
+            }
+        });
+
+        jButtonAnterior.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/icones/Back Button.png"))); // NOI18N
+        jButtonAnterior.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonAnterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAnteriorActionPerformed(evt);
+            }
+        });
+
+        jButtonProximo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/icones/Forward Button.png"))); // NOI18N
+        jButtonProximo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonProximo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonProximoActionPerformed(evt);
+            }
+        });
+
+        jButtonLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/icones/master-clean.png"))); // NOI18N
+        jButtonLimpar.setToolTipText("Limpar Registro");
+        jButtonLimpar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLimparActionPerformed(evt);
+            }
+        });
+
+        jButtonPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/icones/Search.png"))); // NOI18N
+        jButtonPesquisar.setToolTipText("Executar Pesquisa");
+        jButtonPesquisar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPesquisarActionPerformed(evt);
+            }
+        });
+
+        jPanel3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("SUPERMERCADO");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        jButtonSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/icones/Logout_Icon_48.png"))); // NOI18N
+        jButtonSair.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonSair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSairActionPerformed(evt);
+            }
+        });
+
+        jButtonAtualizar_Registro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/icones/Button_Refresh_Icon_32.png"))); // NOI18N
+        jButtonAtualizar_Registro.setToolTipText("Alterar");
+        jButtonAtualizar_Registro.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonAtualizar_Registro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAtualizar_RegistroActionPerformed(evt);
+            }
+        });
+
+        jButtonEntrar_sair_Modo_Pesquisa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/icones/Remote Desktop.png"))); // NOI18N
+        jButtonEntrar_sair_Modo_Pesquisa.setToolTipText("Cancelar Pesquisa");
+        jButtonEntrar_sair_Modo_Pesquisa.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonEntrar_sair_Modo_Pesquisa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEntrar_sair_Modo_PesquisaActionPerformed(evt);
+            }
+        });
+
+        jLabel27.setFont(new java.awt.Font("Tahoma", 1, 9)); // NOI18N
+        jLabel27.setForeground(java.awt.Color.blue);
+        jLabel27.setText("Usuario Logado");
+
+        jLabelUser.setFont(new java.awt.Font("Tahoma", 1, 9)); // NOI18N
+        jLabelUser.setForeground(java.awt.Color.blue);
+        jLabelUser.setText("Nome Usuário");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(129, 129, 129)
+                .addComponent(jButtonAtualizar_Registro, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonEntrar_sair_Modo_Pesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addComponent(jButtonNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonLimpar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addComponent(jButtonAnterior, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonProximo, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addComponent(jButtonSair, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel27, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabelUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jButtonNovo, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+            .addComponent(jButtonPesquisar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButtonAnterior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButtonExcluir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButtonLimpar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButtonProximo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButtonSair, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButtonAtualizar_Registro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButtonEntrar_sair_Modo_Pesquisa, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel27)
+                .addGap(5, 5, 5)
+                .addComponent(jLabelUser))
+        );
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel16.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel16.setText("Negociação");
+
+        jLabel18.setText("Quant.");
+
+        jTextFieldquantidade.setEditable(false);
+        jTextFieldquantidade.setText("1");
+        jTextFieldquantidade.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextFieldquantidadeFocusGained(evt);
+            }
+        });
+        jTextFieldquantidade.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextFieldquantidadeMouseClicked(evt);
+            }
+        });
+        jTextFieldquantidade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldquantidadeActionPerformed(evt);
+            }
+        });
+        jTextFieldquantidade.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldquantidadeKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldquantidadeKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextFieldquantidadeKeyTyped(evt);
+            }
+        });
+
+        jLabel19.setText("VL Total");
+
+        jTextFieldvalortotal_parcial.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextFieldvalortotal_parcialFocusGained(evt);
+            }
+        });
+        jTextFieldvalortotal_parcial.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextFieldvalortotal_parcialMouseClicked(evt);
+            }
+        });
+        jTextFieldvalortotal_parcial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldvalortotal_parcialActionPerformed(evt);
+            }
+        });
+        jTextFieldvalortotal_parcial.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldvalortotal_parcialKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldvalortotal_parcialKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextFieldvalortotal_parcialKeyTyped(evt);
+            }
+        });
+
+        jLabel20.setText("Desconto %");
+
+        jTextFielddesconto.setText("0.0");
+        jTextFielddesconto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFielddescontoKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFielddescontoKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextFielddescontoKeyTyped(evt);
+            }
+        });
+
+        jLabel21.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel21.setText("VLFinal");
+
+        jTextFieldvalorfinal.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextFieldvalorfinalFocusGained(evt);
+            }
+        });
+        jTextFieldvalorfinal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextFieldvalorfinalMouseClicked(evt);
+            }
+        });
+        jTextFieldvalorfinal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldvalorfinalActionPerformed(evt);
+            }
+        });
+
+        jPanel8.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jButtonAtualizar_Item.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jButtonAtualizar_Item.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/icones/Atualizar compras.png"))); // NOI18N
+        jButtonAtualizar_Item.setMargin(new java.awt.Insets(2, 3, 2, 3));
+        jButtonAtualizar_Item.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAtualizar_ItemActionPerformed(evt);
+            }
+        });
+
+        jButtonRemover.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jButtonRemover.setForeground(java.awt.Color.red);
+        jButtonRemover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/icones/Deletar item.png"))); // NOI18N
+        jButtonRemover.setMargin(new java.awt.Insets(2, 3, 2, 3));
+        jButtonRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRemoverActionPerformed(evt);
+            }
+        });
+
+        jButtonAdicionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/icones/add-product-icon-58240.png"))); // NOI18N
+        jButtonAdicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAdicionarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                .addContainerGap(50, Short.MAX_VALUE)
+                .addComponent(jButtonAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonRemover, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonAtualizar_Item, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50))
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonRemover, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonAtualizar_Item, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLabel9.setText("Cód. Barras");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addGap(196, 196, 196)
+                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField2)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldquantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel19)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldvalortotal_parcial, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel20)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFielddesconto, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel21)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldvalorfinal, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel16)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel18)
+                    .addComponent(jTextFieldquantidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel19)
+                    .addComponent(jTextFieldvalortotal_parcial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel20)
+                    .addComponent(jTextFielddesconto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel21)
+                    .addComponent(jTextFieldvalorfinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(3, 3, 3))
+        );
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jTextFieldcodigocliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldcodigoclienteActionPerformed(evt);
+            }
+        });
+
+        jLabel11.setText("Cód. Cliente");
+
+        jLabel13.setText("Nome");
+
+        jLabel14.setText("CPF");
+
+        jButtonPesquisaCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/icones/Search - Copia.png"))); // NOI18N
+        jButtonPesquisaCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPesquisaClienteActionPerformed(evt);
+            }
+        });
+
+        jButtonPesquisaCliente1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/icones/Search - Copia.png"))); // NOI18N
+        jButtonPesquisaCliente1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPesquisaCliente1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextFieldcodigocliente, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonPesquisaCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextFieldnomecliente)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonPesquisaCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextFieldcpfcliente, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonPesquisaCliente1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel11)
+                                .addComponent(jTextFieldcodigocliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel13)
+                                .addComponent(jTextFieldnomecliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel14)
+                                .addComponent(jTextFieldcpfcliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButtonPesquisaCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jTabletabelaItensVenda.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jTabletabelaItensVenda.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTabletabelaItensVendaMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jTabletabelaItensVendaMouseEntered(evt);
+            }
+        });
+        jScrollPane3.setViewportView(jTabletabelaItensVenda);
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3)
+                .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel7.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel5.setText("DINHEIRO");
+
+        jTextFieldDinheiro.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jTextFieldDinheiro.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextFieldDinheiroMouseClicked(evt);
+            }
+        });
+        jTextFieldDinheiro.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldDinheiroKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldDinheiroKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextFieldDinheiroKeyTyped(evt);
+            }
+        });
+
+        jLabel15.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel15.setText("TROCO");
+
+        jTextFieldTroco.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jTextFieldTroco.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldTrocoKeyPressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addComponent(jTextFieldDinheiro, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addComponent(jLabel15)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextFieldTroco, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextFieldTroco)
+                        .addComponent(jLabel15))
+                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextFieldDinheiro)
+                        .addComponent(jLabel5)))
+                .addContainerGap())
+        );
+
+        jLabel30.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel30.setForeground(new java.awt.Color(51, 0, 255));
+        jLabel30.setText("Cód. da Venda");
+
+        jLabel31.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel31.setText("Data");
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel6.setText("Cód. Vendedor");
+
+        jLabel7.setText("Nome");
+
+        jButtonPesquisa_Vendedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/icones/Search - Copia.png"))); // NOI18N
+        jButtonPesquisa_Vendedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPesquisa_VendedorActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextFieldNome_Vendedor)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jTextFieldCod_Vendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonPesquisa_Vendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 133, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonPesquisa_Vendedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(jTextFieldCod_Vendedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(jTextFieldNome_Vendedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        jPanel10.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel4.setText("Produto");
+
+        jLabel3.setText("Cód.");
+
+        jButtonPesquisarPecas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/icones/Search - Copia.png"))); // NOI18N
+        jButtonPesquisarPecas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPesquisarPecasActionPerformed(evt);
+            }
+        });
+
+        jLabel17.setText("Preço Unitário");
+
+        jTextFieldprecounitario.setEditable(false);
+        jTextFieldprecounitario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldprecounitarioActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setText("Estoque Disp.");
+
+        jTextFieldDisp_Estoque.setEditable(false);
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel10.setText("Produto");
+
+        jButtonPesquisarPecas1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/icones/Search - Copia.png"))); // NOI18N
+        jButtonPesquisarPecas1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPesquisarPecas1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel17)
+                                    .addComponent(jLabel8))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jTextFieldprecounitario)
+                                    .addComponent(jTextFieldDisp_Estoque, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addGap(80, 80, 80))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel10Layout.createSequentialGroup()
+                                .addGap(14, 14, 14)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldCod_Peca)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonPesquisarPecas, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(24, 24, 24))
+                            .addGroup(jPanel10Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldNomePeca)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addComponent(jButtonPesquisarPecas1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel10Layout.setVerticalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10)
+                .addGap(8, 8, 8)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextFieldCod_Peca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3))
+                    .addComponent(jButtonPesquisarPecas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(6, 6, 6)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4)
+                        .addComponent(jTextFieldNomePeca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButtonPesquisarPecas1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(6, 6, 6)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(jTextFieldprecounitario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jTextFieldDisp_Estoque, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(8, 8, 8))
+        );
+
+        jPanel11.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel12.setText("TOTAL A PAGAR R$");
+
+        jTextFieldValor_Pagar.setFont(new java.awt.Font("Tahoma", 1, 25)); // NOI18N
+        jTextFieldValor_Pagar.setForeground(java.awt.Color.blue);
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jTextFieldValor_Pagar))
+                .addContainerGap())
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextFieldValor_Pagar, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel12.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel29.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel29.setText("Forma de Pagamento");
+
+        jComboBoxCondicaoPagamento.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxCondicaoPagamento.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBoxCondicaoPagamentoItemStateChanged(evt);
+            }
+        });
+        jComboBoxCondicaoPagamento.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jComboBoxCondicaoPagamentoMouseDragged(evt);
+            }
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                jComboBoxCondicaoPagamentoMouseMoved(evt);
+            }
+        });
+        jComboBoxCondicaoPagamento.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jComboBoxCondicaoPagamentoFocusGained(evt);
+            }
+        });
+        jComboBoxCondicaoPagamento.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jComboBoxCondicaoPagamentoMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jComboBoxCondicaoPagamentoMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jComboBoxCondicaoPagamentoMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jComboBoxCondicaoPagamentoMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jComboBoxCondicaoPagamentoMouseReleased(evt);
+            }
+        });
+        jComboBoxCondicaoPagamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxCondicaoPagamentoActionPerformed(evt);
+            }
+        });
+        jComboBoxCondicaoPagamento.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jComboBoxCondicaoPagamentoKeyPressed(evt);
+            }
+        });
+
+        jPanelPrazo.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
+
+        jLabelTipo_Pagamento.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabelTipo_Pagamento.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelTipo_Pagamento.setText("Opções de Pagamento");
+
+        jLabelVL_entrada.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabelVL_entrada.setText("VL Entrada");
+
+        jTextFieldVL_Entrada.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jTextFieldVL_Entrada.setText("0");
+        jTextFieldVL_Entrada.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldVL_EntradaKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldVL_EntradaKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextFieldVL_EntradaKeyTyped(evt);
+            }
+        });
+
+        jLabelJuros.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabelJuros.setText("% Juros A.M");
+
+        jTextFieldJuros.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jTextFieldJuros.setText("0");
+        jTextFieldJuros.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldJurosKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldJurosKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextFieldJurosKeyTyped(evt);
+            }
+        });
+        jTextFieldJuros.addVetoableChangeListener(new java.beans.VetoableChangeListener() {
+            public void vetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {
+                jTextFieldJurosVetoableChange(evt);
+            }
+        });
+
+        jLabelQuant_Parcelas.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabelQuant_Parcelas.setText("QT de Parcelas");
+
+        jSpinnerParcelas.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jSpinnerParcelas.setModel(new javax.swing.SpinnerNumberModel(1, 1, 3, 1));
+        jSpinnerParcelas.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinnerParcelasStateChanged(evt);
+            }
+        });
+        jSpinnerParcelas.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jSpinnerParcelasKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jSpinnerParcelasKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jSpinnerParcelasKeyTyped(evt);
+            }
+        });
+
+        jLabelTotal_Prazo.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabelTotal_Prazo.setText("Total A Prazo");
+
+        jTextFieldTotal_Prazo.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jTextFieldTotal_Prazo.setText("0");
+        jTextFieldTotal_Prazo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldTotal_PrazoKeyPressed(evt);
+            }
+        });
+
+        jLabelvlparcelas.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabelvlparcelas.setText("VL Parcelas");
+
+        jTextFieldvalorparcelas.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+
+        jLabeldiadevencimento.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabeldiadevencimento.setText("Dias de Vencimentos:");
+
+        jLabel1parcela.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabel1parcela.setText("1ª Parcela");
+
+        jLabel2parcela.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabel2parcela.setText("2ª Parcela");
+
+        jLabel3parcela.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabel3parcela.setText("3ª Parcela");
+
+        jTextField1Parcela.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+
+        jTextField2Parcela.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+
+        jTextField3Parcela.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+
+        javax.swing.GroupLayout jPanelPrazoLayout = new javax.swing.GroupLayout(jPanelPrazo);
+        jPanelPrazo.setLayout(jPanelPrazoLayout);
+        jPanelPrazoLayout.setHorizontalGroup(
+            jPanelPrazoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabelTipo_Pagamento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanelPrazoLayout.createSequentialGroup()
+                .addGroup(jPanelPrazoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabelvlparcelas)
+                    .addComponent(jLabelTotal_Prazo)
+                    .addComponent(jLabelJuros)
+                    .addComponent(jLabelVL_entrada))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelPrazoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelPrazoLayout.createSequentialGroup()
+                        .addComponent(jTextFieldJuros, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabelQuant_Parcelas)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSpinnerParcelas, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE))
+                    .addGroup(jPanelPrazoLayout.createSequentialGroup()
+                        .addGroup(jPanelPrazoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldTotal_Prazo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldVL_Entrada, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldvalorparcelas, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(jPanelPrazoLayout.createSequentialGroup()
+                .addComponent(jLabeldiadevencimento)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelPrazoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel3parcela)
+                    .addComponent(jLabel2parcela)
+                    .addComponent(jLabel1parcela))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelPrazoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField1Parcela)
+                    .addComponent(jTextField2Parcela)
+                    .addComponent(jTextField3Parcela)))
+        );
+        jPanelPrazoLayout.setVerticalGroup(
+            jPanelPrazoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelPrazoLayout.createSequentialGroup()
+                .addComponent(jLabelTipo_Pagamento)
+                .addGap(3, 3, 3)
+                .addGroup(jPanelPrazoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelVL_entrada)
+                    .addComponent(jTextFieldVL_Entrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(2, 2, 2)
+                .addGroup(jPanelPrazoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelJuros)
+                    .addComponent(jTextFieldJuros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelQuant_Parcelas)
+                    .addComponent(jSpinnerParcelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(2, 2, 2)
+                .addGroup(jPanelPrazoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelTotal_Prazo)
+                    .addComponent(jTextFieldTotal_Prazo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(2, 2, 2)
+                .addGroup(jPanelPrazoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelvlparcelas)
+                    .addComponent(jTextFieldvalorparcelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
+                .addComponent(jLabeldiadevencimento)
+                .addGap(5, 5, 5)
+                .addGroup(jPanelPrazoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1parcela)
+                    .addComponent(jTextField1Parcela, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(2, 2, 2)
+                .addGroup(jPanelPrazoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2parcela)
+                    .addComponent(jTextField2Parcela, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(2, 2, 2)
+                .addGroup(jPanelPrazoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3parcela)
+                    .addComponent(jTextField3Parcela, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jButtonFinalizar_Venda.setForeground(java.awt.Color.blue);
+        jButtonFinalizar_Venda.setText("FINALIZAR VENDA");
+        jButtonFinalizar_Venda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFinalizar_VendaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanelPrazo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel29, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jComboBoxCondicaoPagamento, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonFinalizar_Venda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel29)
+                        .addGap(3, 3, 3)
+                        .addComponent(jComboBoxCondicaoPagamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButtonFinalizar_Venda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(2, 2, 2)
+                .addComponent(jPanelPrazo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel9.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel33.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel33.setText("Total  Venda Sem Descontos");
+
+        jTextFieldvalor_venda.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+
+        jTextFieldDenconto_total.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jTextFieldDenconto_total.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jTextFieldDenconto_totalPropertyChange(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel1.setText("Total Desconto");
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel33, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jTextFieldDenconto_total)
+                    .addComponent(jTextFieldvalor_venda, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel33)
+                    .addComponent(jTextFieldvalor_venda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(3, 3, 3)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldDenconto_total, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        jPanel13.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel22.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel22.setText("Situação da Venda");
+
+        jTextFieldSituacao.setEditable(false);
+        jTextFieldSituacao.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jTextFieldSituacao.setForeground(java.awt.Color.blue);
+        jTextFieldSituacao.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextFieldSituacao.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldSituacaoKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldSituacaoKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextFieldSituacaoKeyTyped(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
+        jPanel13.setLayout(jPanel13Layout);
+        jPanel13Layout.setHorizontalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel13Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addComponent(jTextFieldSituacao)
+        );
+        jPanel13Layout.setVerticalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel13Layout.createSequentialGroup()
+                .addComponent(jLabel22)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextFieldSituacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(jLabel30)
+                        .addGap(4, 4, 4)
+                        .addComponent(jTextFieldcodigovenda, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel31)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jFormattedTextFieldData_Hora, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(6, 6, 6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel30))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(16, 16, 16)
+                                .addComponent(jTextFieldcodigovenda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(16, 16, 16)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel31)
+                                    .addComponent(jFormattedTextFieldData_Hora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(6, 6, 6)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(33, Short.MAX_VALUE))
+        );
+
+        setBounds(0, 0, 1170, 620);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLimparActionPerformed
+        // TODO add your handling code here:
+
+        
+//        jTextFieldcodigocliente.setText("");
+        jTextFieldcodigovenda.setText("");
+//        jTextFieldcpfcliente.setText("");
+        jTextFielddesconto.setText("0");
+//        jTextFieldnomecliente.setText("");
+        jTextFieldprecounitario.setText("");
+        jTextFieldquantidade.setText("1");
+        jTextFieldvalorfinal.setText("");
+        jTextFieldvalortotal_parcial.setText("");
+
+        jTextFieldVL_Entrada.setText("0");
+        jTextFieldJuros.setText("0");
+        jTextFieldTotal_Prazo.setText("0");
+        jSpinnerParcelas.setValue(1);
+        
+        jTextField1Parcela.setText("");
+        jTextField2Parcela.setText("");
+        jTextField3Parcela.setText("");
+        
+        jTextFieldDinheiro.setText("");
+        jTextFieldTroco.setText("");
+        jTextFieldValor_Pagar.setText("");
+        
+        jTextFieldCod_Peca.setText("");
+        jTextFieldNomePeca.setText("");
+        
+        jTextFieldvalor_venda.setText("");
+
+        jTextField2.setText("");
+        jTextFieldDisp_Estoque.setText("");
+
+        jTextFieldSituacao.setText("");
+        
+        
+        Hora_Atual_Sistema();
+        
+        Preencher_FormaPagamento();
+        
+        Preencher_Tabela(null);
+        
+        
+    }//GEN-LAST:event_jButtonLimparActionPerformed
+
+    private void jButtonPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisarActionPerformed
+
+            
+          //Verificar Id da venda
+            try {
+                Conexao.conexao();
+                Conexao.executaSQL("select * from venda_pecas where idVenda_pecas ='"+jTextFieldcodigovenda.getText()+"'");
+                
+                Conexao.rs.first();
+                String id = Conexao.rs.getString("idVenda_pecas");
+      
+                //Verificar itens da venda        
+        try {
+      
+            Conexao.conexao();
+            Conexao.executaSQL("SELECT * FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas`='"+jTextFieldcodigovenda.getText()+"'");
+            
+            
+            Conexao.rs.first();
+            
+            String Verificar_Itens = Conexao.rs.getString("Venda_pecas_idVenda_pecas");
+      
+                
+                if(id != ""){
+                    
+                    
+//        String Forma_Pagamento="";
+ModVenda_Pecas.setIdVenda_Pecas(Integer.parseInt(jTextFieldcodigovenda.getText()));
+
+
+//Verificar Forma de Pagamento
+Conexao.conexao();
+Conexao.executaSQL("select * from venda_pecas where idvenda_pecas='"+ModVenda_Pecas.getIdVenda_Pecas()+"'");
+try {
+    Conexao.rs.first();
+    
+    ModVenda_Pecas.setForma_pagamento(Conexao.rs.getString("Forma_Pagamento"));
+    
+} catch (SQLException ex) {
+//            JOptionPane.showMessageDialog(null, ex);
+
+JOptionPane.showMessageDialog(null, "venda não finalizada"); 
+
+}
+
+
+//Verificar Forma de Pagamento
+Conexao.conexao();
+Conexao.executaSQL("select * from venda_pecas where idvenda_pecas='"+ModVenda_Pecas.getIdVenda_Pecas()+"'");
+try {
+    Conexao.rs.first();
+    
+    ModVenda_Pecas.setSituacao(Conexao.rs.getString("Situacao_Venda"));
+    
+} catch (SQLException ex) {
+//            JOptionPane.showMessageDialog(null, ex);
+
+JOptionPane.showMessageDialog(null, "venda não finalizada");
+
+}
+
+
+
+if (ModVenda_Pecas.getSituacao().equals("Em Andamento")){
+    
+    ControlVendas_Pecas.Pesquisar_Venda(ModVenda_Pecas, ModItens_Pecas, ModPecas, ModCliente, ModEstoque2);
+    
+    //Venda
+    //Data Para Sql 2016/02/21 17:21
+    String anoVenda = ModVenda_Pecas.getData_VendaPecas().substring(0,4);
+    String mesVenda = ModVenda_Pecas.getData_VendaPecas().substring(5,7);
+    String diaVenda = ModVenda_Pecas.getData_VendaPecas().substring(8,10);
+    String horaVenda = ModVenda_Pecas.getData_VendaPecas().substring(11,13);
+    String minutoVenda = ModVenda_Pecas.getData_VendaPecas().substring(14,16);
+    String Vencimento1_SqlVenda = (diaVenda+"-"+mesVenda+"-"+anoVenda+" "+horaVenda+":"+minutoVenda);
+    
+    jTextFieldSituacao.setText(String.valueOf(ModVenda_Pecas.getSituacao()));
+    
+//        JOptionPane.showMessageDialog(null, Vencimento1_SqlVenda);
+
+jFormattedTextFieldData_Hora.setText(String.valueOf(Vencimento1_SqlVenda));
+jTextFieldCod_Vendedor.setText(String.valueOf(ModVenda_Pecas.getIDFuncionario_Vendedor()));
+jTextFieldcodigocliente.setText(String.valueOf(ModVenda_Pecas.getIDCliente()));
+//jTextFieldValor_Pagar.setText(String.valueOf(ModVenda_Pecas.getTotal_Venda()));
+jTextFieldDenconto_total.setText(String.valueOf(ModVenda_Pecas.getTotal_desconto()));
+jTextFieldvalor_venda.setText(String.valueOf(ModVenda_Pecas.getTotal_venda_bruto()));
+//        jComboBoxCondicaoPagamento.setSelectedItem(ModVenda_Pecas.getForma_pagamento());
+
+//Itens Venda
+jTextFieldquantidade.setText(String.valueOf(ModItens_Pecas.getQuantidade_pecas()));
+jTextFieldvalorfinal.setText(String.valueOf(ModItens_Pecas.getValorvenda_pecas()));
+jTextFieldCod_Peca.setText(String.valueOf(ModItens_Pecas.getId_Peca()));
+jTextFielddesconto.setText(String.valueOf(ModItens_Pecas.getDeconto()));
+jTextFieldvalortotal_parcial.setText(String.valueOf(ModItens_Pecas.getValortotal_parcial()));
+
+//Preencher Campo Valor Venda
+Conexao.conexao();
+Conexao.executaSQL("SELECT SUM(`ValorVenda_Pecas`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+NumberFormat DinheiroUS = NumberFormat.getNumberInstance(localeUS);
+DinheiroUS.setMaximumFractionDigits(2);
+
+
+try {
+    Conexao.rs.first();
+    
+    Float Valor_Venda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorVenda_Pecas`)"));
+    jTextFieldValor_Pagar.setText(String.valueOf(DinheiroUS.format(Valor_Venda)));
+    
+} catch (SQLException ex) {
+    JOptionPane.showMessageDialog(null, "Erro no campo: total a pagar");
+}
+
+
+//Preencher Campo Valor Venda Sem Desconto
+Conexao.conexao();
+Conexao.executaSQL("SELECT SUM(`ValorTotal_parcial`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+try {
+    Conexao.rs.first();
+    
+    Float Valor_VendaSemDesconto = Float.parseFloat(Conexao.rs.getString("SUM(`ValorTotal_parcial`)"));
+    jTextFieldvalor_venda.setText(String.valueOf(DinheiroUS.format(Valor_VendaSemDesconto)));
+    
+} catch (SQLException ex) {
+    JOptionPane.showMessageDialog(null, "Erro no campo: total venda sem descontos");
+}
+
+//Preencher Campo Total dos descontos
+float Parcial = Float.parseFloat(jTextFieldvalor_venda.getText());
+//            JOptionPane.showMessageDialog(null, Parcial);
+float Total = Float.parseFloat(jTextFieldValor_Pagar.getText()), Res_parcial;
+Res_parcial = (Parcial - Total);
+//            JOptionPane.showMessageDialog(null, Total);
+jTextFieldDenconto_total.setText(String.valueOf(DinheiroUS.format(Res_parcial)));
+
+
+
+//Peça
+jTextFieldNomePeca.setText(String.valueOf(ModPecas.getNome_pecas()));
+
+//Estoque
+jTextFieldprecounitario.setText(String.valueOf(ModEstoque2.getValor_venda_unitario()));
+
+//Cliente
+jTextFieldnomecliente.setText(String.valueOf(ModCliente.getNome_cliente()));
+jTextFieldcpfcliente.setText(String.valueOf(ModCliente.getCpf()));
+
+jButtonFinalizar_Venda.setEnabled(true);
+jButtonFinalizar_Venda.setEnabled(true);
+jButtonAdicionar.setEnabled(true);
+jButtonRemover.setEnabled(true);
+jButtonAtualizar_Item.setEnabled(true);
+
+Preencher_Tabela("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on pecas.`idPecas` = estoque.`Pecas_idPecas` where itensvenda_pecas.`Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+//Habilitar Botões
+jButtonAtualizar_Registro.setEnabled(true);
+jButtonExcluir.setEnabled(true);
+jButtonAnterior.setEnabled(true);
+jButtonProximo.setEnabled(true);
+
+}else{
+    
+    //Verificar situação da venda
+    if(ModVenda_Pecas.getSituacao().equals("Finalizada")){
+        jButtonFinalizar_Venda.setEnabled(false);
+        jButtonAdicionar.setEnabled(false);
+        jButtonRemover.setEnabled(false);
+        jButtonAtualizar_Item.setEnabled(false);
+    }
+    
+    if(ModVenda_Pecas.getSituacao().equals("Em Andamento")){
+        jButtonFinalizar_Venda.setEnabled(true);
+        jButtonAdicionar.setEnabled(true);
+        jButtonRemover.setEnabled(true);
+        jButtonAtualizar_Item.setEnabled(true);
+    }
+    
+    
+    
+//       JOptionPane.showMessageDialog(null, ModVenda_Pecas.getForma_pagamento());
+
+
+
+if (ModVenda_Pecas.getForma_pagamento().equals("A Vista")){
+    
+    NumberFormat DinheiroUS = NumberFormat.getNumberInstance(localeUS);
+    DinheiroUS.setMaximumFractionDigits(2);
+    
+    
+    ControlVendas_Pecas.Pesquisar_Venda(ModVenda_Pecas, ModItens_Pecas, ModPecas, ModCliente, ModEstoque2);
+    
+    //Venda
+    //Data Para Sql 2016/02/21 17:21
+    String anoVenda = ModVenda_Pecas.getData_VendaPecas().substring(0,4);
+    String mesVenda = ModVenda_Pecas.getData_VendaPecas().substring(5,7);
+    String diaVenda = ModVenda_Pecas.getData_VendaPecas().substring(8,10);
+    String horaVenda = ModVenda_Pecas.getData_VendaPecas().substring(11,13);
+    String minutoVenda = ModVenda_Pecas.getData_VendaPecas().substring(14,16);
+    String Vencimento1_SqlVenda = (diaVenda+"-"+mesVenda+"-"+anoVenda+" "+horaVenda+":"+minutoVenda);
+    
+    jTextFieldSituacao.setText(String.valueOf(ModVenda_Pecas.getSituacao()));
+    
+//        JOptionPane.showMessageDialog(null, Vencimento1_SqlVenda);
+
+jFormattedTextFieldData_Hora.setText(String.valueOf(Vencimento1_SqlVenda));
+jTextFieldCod_Vendedor.setText(String.valueOf(ModVenda_Pecas.getIDFuncionario_Vendedor()));
+jTextFieldcodigocliente.setText(String.valueOf(ModVenda_Pecas.getIDCliente()));
+jTextFieldValor_Pagar.setText(String.valueOf(DinheiroUS.format(ModVenda_Pecas.getTotal_Venda())));
+jTextFieldDenconto_total.setText(String.valueOf(DinheiroUS.format(ModVenda_Pecas.getTotal_desconto())));
+jTextFieldvalor_venda.setText(String.valueOf(DinheiroUS.format(ModVenda_Pecas.getTotal_venda_bruto())));
+jComboBoxCondicaoPagamento.setSelectedItem(ModVenda_Pecas.getForma_pagamento());
+
+
+//Itens Venda
+jTextFieldquantidade.setText(String.valueOf(ModItens_Pecas.getQuantidade_pecas()));
+jTextFieldvalorfinal.setText(String.valueOf(DinheiroUS.format(ModItens_Pecas.getValorvenda_pecas())));
+jTextFieldCod_Peca.setText(String.valueOf(ModItens_Pecas.getId_Peca()));
+jTextFielddesconto.setText(String.valueOf(DinheiroUS.format(ModItens_Pecas.getDeconto())));
+jTextFieldvalortotal_parcial.setText(String.valueOf(DinheiroUS.format(ModItens_Pecas.getValortotal_parcial())));
+
+
+//Preencher Campo Valor Venda
+Conexao.conexao();
+Conexao.executaSQL("SELECT SUM(`ValorVenda_Pecas`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+try {
+    Conexao.rs.first();
+    
+    Float Valor_Venda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorVenda_Pecas`)"));
+    jTextFieldValor_Pagar.setText(String.valueOf(DinheiroUS.format(Valor_Venda)));
+    
+} catch (SQLException ex) {
+    JOptionPane.showMessageDialog(null, "Erro no campo: total a pagar");
+}
+
+
+//Preencher Campo Valor Venda Sem Desconto
+Conexao.conexao();
+Conexao.executaSQL("SELECT SUM(`ValorTotal_parcial`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+try {
+    Conexao.rs.first();
+    
+    Float Valor_VendaSemDesconto = Float.parseFloat(Conexao.rs.getString("SUM(`ValorTotal_parcial`)"));
+    jTextFieldvalor_venda.setText(String.valueOf(DinheiroUS.format(Valor_VendaSemDesconto)));
+    
+} catch (SQLException ex) {
+    JOptionPane.showMessageDialog(null, "Erro no campo: total venda sem descontos");
+}
+
+//Preencher Campo Total dos descontos
+float Parcial = Float.parseFloat(jTextFieldvalor_venda.getText());
+//            JOptionPane.showMessageDialog(null, Parcial);
+float Total = Float.parseFloat(jTextFieldValor_Pagar.getText()), Res_parcial;
+Res_parcial = (Parcial - Total);
+//            JOptionPane.showMessageDialog(null, Total);
+jTextFieldDenconto_total.setText(String.valueOf(DinheiroUS.format(Res_parcial)));
+
+
+
+//Peça
+jTextFieldNomePeca.setText(String.valueOf(ModPecas.getNome_pecas()));
+
+//Estoque
+jTextFieldprecounitario.setText(String.valueOf(DinheiroUS.format(ModEstoque2.getValor_venda_unitario())));
+
+//Cliente
+jTextFieldnomecliente.setText(String.valueOf(ModCliente.getNome_cliente()));
+jTextFieldcpfcliente.setText(String.valueOf(ModCliente.getCpf()));
+
+
+Preencher_Tabela("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on pecas.`idPecas` = estoque.`Pecas_idPecas` where itensvenda_pecas.`Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+//Habilitar Botões
+jButtonAtualizar_Registro.setEnabled(true);
+jButtonExcluir.setEnabled(true);
+jButtonAnterior.setEnabled(true);
+jButtonProximo.setEnabled(true);
+
+}else{
+    
+    if(ModVenda_Pecas.getForma_pagamento().equals("Cartão de Credito")){
+        
+        NumberFormat DinheiroUS = NumberFormat.getNumberInstance(localeUS);
+        DinheiroUS.setMaximumFractionDigits(2);
+        
+        
+        ControlVendas_Pecas.Pesquisar_Venda(ModVenda_Pecas, ModItens_Pecas, ModPecas, ModCliente, ModEstoque2);
+        
+        //Venda  
+        //Data Para Sql 2016/02/21 17:21
+        String anoVenda = ModVenda_Pecas.getData_VendaPecas().substring(0,4);
+        String mesVenda = ModVenda_Pecas.getData_VendaPecas().substring(5,7);
+        String diaVenda = ModVenda_Pecas.getData_VendaPecas().substring(8,10);
+        String horaVenda = ModVenda_Pecas.getData_VendaPecas().substring(11,13);
+        String minutoVenda = ModVenda_Pecas.getData_VendaPecas().substring(14,16);
+        String Vencimento1_SqlVenda = (diaVenda+"-"+mesVenda+"-"+anoVenda+" "+horaVenda+":"+minutoVenda);
+        
+//        JOptionPane.showMessageDialog(null, Vencimento1_SqlVenda);
+
+jFormattedTextFieldData_Hora.setText(String.valueOf(Vencimento1_SqlVenda));
+jTextFieldCod_Vendedor.setText(String.valueOf(ModVenda_Pecas.getIDFuncionario_Vendedor()));
+jTextFieldcodigocliente.setText(String.valueOf(ModVenda_Pecas.getIDCliente()));
+jTextFieldValor_Pagar.setText(String.valueOf(DinheiroUS.format(ModVenda_Pecas.getTotal_Venda())));
+jTextFieldDenconto_total.setText(String.valueOf(DinheiroUS.format(ModVenda_Pecas.getTotal_desconto())));
+jTextFieldvalor_venda.setText(String.valueOf(DinheiroUS.format(ModVenda_Pecas.getTotal_venda_bruto())));
+jComboBoxCondicaoPagamento.setSelectedItem(ModVenda_Pecas.getForma_pagamento());
+
+jTextFieldSituacao.setText(String.valueOf(ModVenda_Pecas.getSituacao()));
+
+
+//Itens Venda
+jTextFieldquantidade.setText(String.valueOf(ModItens_Pecas.getQuantidade_pecas()));
+jTextFieldvalorfinal.setText(String.valueOf(DinheiroUS.format(ModItens_Pecas.getValorvenda_pecas())));
+jTextFieldCod_Peca.setText(String.valueOf(ModItens_Pecas.getId_Peca()));
+jTextFielddesconto.setText(String.valueOf(DinheiroUS.format(ModItens_Pecas.getDeconto())));
+jTextFieldvalortotal_parcial.setText(String.valueOf(DinheiroUS.format(ModItens_Pecas.getValortotal_parcial())));
+
+
+//Preencher Campo Valor Venda
+Conexao.conexao();
+Conexao.executaSQL("SELECT SUM(`ValorVenda_Pecas`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+try {
+    Conexao.rs.first();
+    
+    Float Valor_Venda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorVenda_Pecas`)"));
+    jTextFieldValor_Pagar.setText(String.valueOf(DinheiroUS.format(Valor_Venda)));
+    
+} catch (SQLException ex) {
+    JOptionPane.showMessageDialog(null, "Erro no campo: total a pagar");
+}
+
+
+//Preencher Campo Valor Venda Sem Desconto
+Conexao.conexao();
+Conexao.executaSQL("SELECT SUM(`ValorTotal_parcial`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+try {
+    Conexao.rs.first();
+    
+    Float Valor_VendaSemDesconto = Float.parseFloat(Conexao.rs.getString("SUM(`ValorTotal_parcial`)"));
+    jTextFieldvalor_venda.setText(String.valueOf(DinheiroUS.format(Valor_VendaSemDesconto)));
+    
+} catch (SQLException ex) {
+    JOptionPane.showMessageDialog(null, "Erro no campo: total venda sem descontos");
+}
+
+//Preencher Campo Total dos descontos
+float Parcial = Float.parseFloat(jTextFieldvalor_venda.getText());
+//            JOptionPane.showMessageDialog(null, Parcial);
+float Total = Float.parseFloat(jTextFieldValor_Pagar.getText()), Res_parcial;
+Res_parcial = (Parcial - Total);
+//            JOptionPane.showMessageDialog(null, Total);
+jTextFieldDenconto_total.setText(String.valueOf(DinheiroUS.format(Res_parcial)));
+
+
+
+//Peça
+jTextFieldNomePeca.setText(String.valueOf(ModPecas.getNome_pecas()));
+
+//Estoque
+jTextFieldprecounitario.setText(String.valueOf(DinheiroUS.format(ModEstoque2.getValor_venda_unitario())));
+
+//Cliente
+jTextFieldnomecliente.setText(String.valueOf(ModCliente.getNome_cliente()));
+jTextFieldcpfcliente.setText(String.valueOf(ModCliente.getCpf()));
+
+//Parcelamento
+jTextFieldVL_Entrada.setText(String.valueOf(DinheiroUS.format(ModVenda_Pecas.getValor_Entrada())));
+jTextFieldJuros.setText(String.valueOf(DinheiroUS.format(ModVenda_Pecas.getPercentual_Juros_AM())));
+jSpinnerParcelas.setValue(ModVenda_Pecas.getQuant_Parcelas());
+jTextFieldTotal_Prazo.setText(String.valueOf(DinheiroUS.format(ModVenda_Pecas.getTotal_Prazo())));
+jTextFieldvalorparcelas.setText(String.valueOf(DinheiroUS.format(ModVenda_Pecas.getValor_Parcelas())));
+
+Preencher_Tabela("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on pecas.`idPecas` = estoque.`Pecas_idPecas` where itensvenda_pecas.`Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+//Habilitar Botões
+jButtonAtualizar_Registro.setEnabled(true);
+jButtonExcluir.setEnabled(true);
+jButtonAnterior.setEnabled(true);
+jButtonProximo.setEnabled(true);
+
+    }else{
+        
+        if(ModVenda_Pecas.getForma_pagamento().equals("A Prazo")){
+            
+            NumberFormat DinheiroUS = NumberFormat.getNumberInstance(localeUS);
+            DinheiroUS.setMaximumFractionDigits(2);
+            
+            
+            ControlVendas_Pecas.Pesquisar_Venda(ModVenda_Pecas, ModItens_Pecas, ModPecas, ModCliente, ModEstoque2);
+            //Venda
+            //Data Para Sql 2016/02/21 17:21
+            String anoVenda = ModVenda_Pecas.getData_VendaPecas().substring(0,4);
+            String mesVenda = ModVenda_Pecas.getData_VendaPecas().substring(5,7);
+            String diaVenda = ModVenda_Pecas.getData_VendaPecas().substring(8,10);
+            String horaVenda = ModVenda_Pecas.getData_VendaPecas().substring(11,13);
+            String minutoVenda = ModVenda_Pecas.getData_VendaPecas().substring(14,16);
+            String Vencimento1_SqlVenda = (diaVenda+"-"+mesVenda+"-"+anoVenda+" "+horaVenda+":"+minutoVenda);
+            
+//        JOptionPane.showMessageDialog(null, Vencimento1_SqlVenda);
+
+jFormattedTextFieldData_Hora.setText(String.valueOf(Vencimento1_SqlVenda));
+jTextFieldCod_Vendedor.setText(String.valueOf(ModVenda_Pecas.getIDFuncionario_Vendedor()));
+jTextFieldcodigocliente.setText(String.valueOf(ModVenda_Pecas.getIDCliente()));
+jTextFieldValor_Pagar.setText(String.valueOf(DinheiroUS.format(ModVenda_Pecas.getTotal_Venda())));
+jTextFieldDenconto_total.setText(String.valueOf(DinheiroUS.format(ModVenda_Pecas.getTotal_desconto())));
+jTextFieldvalor_venda.setText(String.valueOf(DinheiroUS.format(ModVenda_Pecas.getTotal_venda_bruto())));
+jComboBoxCondicaoPagamento.setSelectedItem(ModVenda_Pecas.getForma_pagamento());
+
+jTextFieldSituacao.setText(String.valueOf(ModVenda_Pecas.getSituacao()));
+
+
+//Itens Venda
+jTextFieldquantidade.setText(String.valueOf(ModItens_Pecas.getQuantidade_pecas()));
+jTextFieldvalorfinal.setText(String.valueOf(DinheiroUS.format(ModItens_Pecas.getValorvenda_pecas())));
+jTextFieldCod_Peca.setText(String.valueOf(ModItens_Pecas.getId_Peca()));
+jTextFielddesconto.setText(String.valueOf(DinheiroUS.format(ModItens_Pecas.getDeconto())));
+jTextFieldvalortotal_parcial.setText(String.valueOf(DinheiroUS.format(ModItens_Pecas.getValortotal_parcial())));
+
+//Preencher Campo Valor Venda
+Conexao.conexao();
+Conexao.executaSQL("SELECT SUM(`ValorVenda_Pecas`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+try {
+    Conexao.rs.first();
+    
+    Float Valor_Venda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorVenda_Pecas`)"));
+    jTextFieldValor_Pagar.setText(String.valueOf(DinheiroUS.format(Valor_Venda)));
+    
+} catch (SQLException ex) {
+    JOptionPane.showMessageDialog(null, "Erro no campo: total a pagar");
+}
+
+
+//Preencher Campo Valor Venda Sem Desconto
+Conexao.conexao();
+Conexao.executaSQL("SELECT SUM(`ValorTotal_parcial`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+try {
+    Conexao.rs.first();
+    
+    Float Valor_VendaSemDesconto = Float.parseFloat(Conexao.rs.getString("SUM(`ValorTotal_parcial`)"));
+    jTextFieldvalor_venda.setText(String.valueOf(DinheiroUS.format(Valor_VendaSemDesconto)));
+    
+} catch (SQLException ex) {
+    JOptionPane.showMessageDialog(null, "Erro no campo: total venda sem descontos");
+}
+
+//Preencher Campo Total dos descontos
+float Parcial = Float.parseFloat(jTextFieldvalor_venda.getText());
+//            JOptionPane.showMessageDialog(null, Parcial);
+float Total = Float.parseFloat(jTextFieldValor_Pagar.getText()), Res_parcial;
+Res_parcial = (Parcial - Total);
+//            JOptionPane.showMessageDialog(null, Total);
+jTextFieldDenconto_total.setText(String.valueOf(DinheiroUS.format(Res_parcial)));
+
+
+//Peça
+jTextFieldNomePeca.setText(String.valueOf(ModPecas.getNome_pecas()));
+
+//Estoque
+jTextFieldprecounitario.setText(String.valueOf(DinheiroUS.format(ModEstoque2.getValor_venda_unitario())));
+
+//Cliente
+jTextFieldnomecliente.setText(String.valueOf(ModCliente.getNome_cliente()));
+jTextFieldcpfcliente.setText(String.valueOf(ModCliente.getCpf()));
+
+//Parcelamento
+jTextFieldVL_Entrada.setText(String.valueOf(DinheiroUS.format(ModVenda_Pecas.getValor_Entrada())));
+jTextFieldJuros.setText(String.valueOf(DinheiroUS.format(ModVenda_Pecas.getPercentual_Juros_AM())));
+jSpinnerParcelas.setValue(ModVenda_Pecas.getQuant_Parcelas());
+jTextFieldTotal_Prazo.setText(String.valueOf(DinheiroUS.format(ModVenda_Pecas.getTotal_Prazo())));
+jTextFieldvalorparcelas.setText(String.valueOf(DinheiroUS.format(ModVenda_Pecas.getValor_Parcelas())));
+
+//Data Para Sql
+String ano = ModVenda_Pecas.getVencimento1().substring(0,4);
+String mes = ModVenda_Pecas.getVencimento1().substring(5,7);
+String dia = ModVenda_Pecas.getVencimento1().substring(8);
+String Vencimento1_Sql = (dia+"-"+mes+"-"+ano);
+jTextField1Parcela.setText(String.valueOf(Vencimento1_Sql));
+
+Preencher_Tabela("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on pecas.`idPecas` = estoque.`Pecas_idPecas` where itensvenda_pecas.`Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+//Habilitar Botões
+jButtonAtualizar_Registro.setEnabled(true);
+jButtonExcluir.setEnabled(true);
+jButtonAnterior.setEnabled(true);
+jButtonProximo.setEnabled(true);
+
+        }else{
+            JOptionPane.showMessageDialog(null, "Erro: Opção Não localizada");
+            
+            
+            
+                }
+        
+            }
+    
+        }
+
+    }
+
+ }
+
+                
+                
+            } catch (SQLException ex) {
+                   
+                ModVenda_Pecas.setIdVenda_Pecas(Integer.parseInt(jTextFieldcodigovenda.getText()));
+                
+                ControlVendas_Pecas.Pesquisar_VendaSemItens(ModVenda_Pecas, ModCliente);
+    
+    //Venda
+    //Data Para Sql 2016/02/21 17:21
+    String anoVenda = ModVenda_Pecas.getData_VendaPecas().substring(0,4);
+    String mesVenda = ModVenda_Pecas.getData_VendaPecas().substring(5,7);
+    String diaVenda = ModVenda_Pecas.getData_VendaPecas().substring(8,10);
+    String horaVenda = ModVenda_Pecas.getData_VendaPecas().substring(11,13);
+    String minutoVenda = ModVenda_Pecas.getData_VendaPecas().substring(14,16);
+    String Vencimento1_SqlVenda = (diaVenda+"-"+mesVenda+"-"+anoVenda+" "+horaVenda+":"+minutoVenda);
+    
+    jTextFieldSituacao.setText(String.valueOf(ModVenda_Pecas.getSituacao()));
+    
+//        JOptionPane.showMessageDialog(null, Vencimento1_SqlVenda);
+
+jFormattedTextFieldData_Hora.setText(String.valueOf(Vencimento1_SqlVenda));
+jTextFieldCod_Vendedor.setText(String.valueOf(ModVenda_Pecas.getIDFuncionario_Vendedor()));
+jTextFieldcodigocliente.setText(String.valueOf(ModVenda_Pecas.getIDCliente()));
+
+
+//Cliente
+jTextFieldnomecliente.setText(String.valueOf(ModCliente.getNome_cliente()));
+jTextFieldcpfcliente.setText(String.valueOf(ModCliente.getCpf()));
+
+jButtonFinalizar_Venda.setEnabled(true);
+jButtonFinalizar_Venda.setEnabled(true);
+jButtonAdicionar.setEnabled(true);
+jButtonRemover.setEnabled(true);
+jButtonAtualizar_Item.setEnabled(true);
+
+Preencher_Tabela("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on pecas.`idPecas` = estoque.`Pecas_idPecas` where itensvenda_pecas.`Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+//Habilitar Botões
+jButtonAtualizar_Registro.setEnabled(true);
+jButtonExcluir.setEnabled(true);
+jButtonAnterior.setEnabled(true);
+jButtonProximo.setEnabled(true);
+
+jTextField2.setText("");
+jTextFieldvalortotal_parcial.setText("");
+jTextFielddesconto.setText("0");
+jTextFieldvalorfinal.setText("");
+jTextFieldValor_Pagar.setText("");
+jTextFieldCod_Peca.setText("");
+jTextFieldNomePeca.setText("");
+jTextFieldprecounitario.setText("");
+jTextFieldDisp_Estoque.setText("");
+jTextFieldvalor_venda.setText("");
+jTextFieldDenconto_total.setText("");
+
+                
+            }
+            
+            
+            
+            
+        } catch (SQLException ex) {
+  
+            JOptionPane.showMessageDialog(null, "Registro Não Localizado!");
+  
+       }
+        
+    
+             
+        
+    }//GEN-LAST:event_jButtonPesquisarActionPerformed
+
+    private void jButtonSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSairActionPerformed
+        // TODO add your handling code here:
+
+        if(jTextFieldSituacao.getText().equals("Em Andamento")){
+       
+        if(JOptionPane.showConfirmDialog(null, "Venda em andamento, sair da tela", "Pergunta", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)== JOptionPane.YES_NO_OPTION){
+
+            dispose();
+            
+        }
+            
+        }else{
+            
+            dispose();
+            
+            }
+        
+        
+               
+       
+
+        
+    }//GEN-LAST:event_jButtonSairActionPerformed
+
+    private void jButtonEntrar_sair_Modo_PesquisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEntrar_sair_Modo_PesquisaActionPerformed
+        // TODO add your handling code here:
+
+        jTextFieldcodigovenda.setEnabled(true);
+        jTextFieldcodigovenda.setEditable(true);
+        jButtonPesquisar.setEnabled(true);
+
+    }//GEN-LAST:event_jButtonEntrar_sair_Modo_PesquisaActionPerformed
+
+    private void jTextFieldprecounitarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldprecounitarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldprecounitarioActionPerformed
+
+    private void jTextFieldvalortotal_parcialFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldvalortotal_parcialFocusGained
+        // TODO add your handling code here:
+
+        
+        
+    }//GEN-LAST:event_jTextFieldvalortotal_parcialFocusGained
+
+    private void jTextFieldvalortotal_parcialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldvalortotal_parcialActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldvalortotal_parcialActionPerformed
+
+    private void jTextFieldvalorfinalFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldvalorfinalFocusGained
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jTextFieldvalorfinalFocusGained
+
+    private void jTextFieldvalorfinalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldvalorfinalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldvalorfinalActionPerformed
+
+    private void jButtonPesquisaClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisaClienteActionPerformed
+        // TODO add your handling code here:
+
+        ModCliente.setPesquisa_Cliente(Integer.parseInt(jTextFieldcodigocliente.getText()));
+        
+        ControlVendas_Pecas.Pesquisar_Cliente_VendasPecas(ModCliente);
+        
+        jTextFieldcodigocliente.setText(String.valueOf(ModCliente.getId_cliente()));
+        jTextFieldnomecliente.setText(String.valueOf(ModCliente.getNome_cliente()));
+        jTextFieldcpfcliente.setText(String.valueOf(ModCliente.getCpf()));
+        
+
+    }//GEN-LAST:event_jButtonPesquisaClienteActionPerformed
+
+    private void jTabletabelaItensVendaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabletabelaItensVendaMouseClicked
+        // TODO add your handling code here:
+
+        Valores_Tabela();
+
+    }//GEN-LAST:event_jTabletabelaItensVendaMouseClicked
+
+    private void jButtonNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNovoActionPerformed
+        // TODO add your handling code here:
+
+        Hora_Atual_Sistema();
+      
+        jButtonLimparActionPerformed(evt);
+        
+        jTextFieldcodigovenda.setEnabled(false);
+        
+        jButtonFinalizar_Venda.setEnabled(true);
+        
+        //Desabilitar Botões
+        jButtonAtualizar_Registro.setEnabled(false);
+        jButtonExcluir.setEnabled(false);
+        jButtonAnterior.setEnabled(false);
+        jButtonProximo.setEnabled(false);
+        jButtonPesquisar.setEnabled(false);
+
+        
+    }//GEN-LAST:event_jButtonNovoActionPerformed
+
+    private void jButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirActionPerformed
+        // TODO add your handling code here:
+//String Situacao = jTextFieldSituacao.getText();
+
+if (jTextFieldSituacao.getText().equals("Finalizada")){
+    
+    JOptionPane.showMessageDialog(null, "Erro: Vendas Finalizadas Não Podem Ser Excluidas!");
+    
+}else{
+        
+
+        try {
+            
+            
+//Implementar código para excluir vendas sem itens
+Conexao.conexao();
+Conexao.executaSQL("SELECT * FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas`='"+jTextFieldcodigovenda.getText()+"'");
+
+
+Conexao.rs.first();
+
+String Verificar_Itens = Conexao.rs.getString("Venda_pecas_idVenda_pecas");
+
+//Verificar venda
+try {
+    
+    Conexao.conexao();
+    
+    Conexao.executaSQL("select * from venda_pecas where idVenda_pecas ='"+jTextFieldcodigovenda.getText()+"'");
+    
+    Conexao.rs.first();
+    
+    String Cod_Venda = Conexao.rs.getString("idVenda_pecas");
+    
+    
+    if (Cod_Venda != ""){
+        
+
+        if(JOptionPane.showConfirmDialog(null, "Confirmar Exclusão da Venda", "Pergunta", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)== JOptionPane.YES_NO_OPTION){
+            
+            
+            //Estoque
+            Conexao.conexao();
+            Conexao.executaSQL("SELECT * FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas`='"+jTextFieldcodigovenda.getText()+"'");
+            
+            
+            Conexao.rs.first();
+            
+            String Id_Veiculo = Conexao.rs.getString("Pecas_idPecas");
+            String Id_Venda = Conexao.rs.getString("Venda_pecas_idVenda_pecas");
+            
+            ModItens_Pecas.setId_Peca(Integer.parseInt(Id_Veiculo));
+            
+            //Devolver itens ao Estoque
+            ConexaoItem.conexao();
+            ConexaoItem.executaSQL("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on estoque.`Pecas_idPecas` = itensvenda_pecas.`Pecas_idPecas` WHERE itensvenda_pecas.`Venda_pecas_idVenda_pecas`='"+jTextFieldcodigovenda.getText()+"' and `idPecas`='"+Id_Veiculo+"'");
+            
+            ConexaoItem.rs.first();
+            
+            int Quant_estoque = Integer.parseInt(ConexaoItem.rs.getString("Quant_em_estoque")), quant = Integer.parseInt(ConexaoItem.rs.getString("Quantidade_pecas")), res;
+            res = (Quant_estoque + quant);
+            
+            ModItens_Pecas.setQuantidade_pecas(res);
+            ControlVendas_Pecas.Devolver_ItemEstoque(ModItens_Pecas);
+//           JOptionPane.showMessageDialog(null, "Item Removido");
+
+try {
+    //Loop
+    while(Id_Veiculo != ""){
+        
+//                       JOptionPane.showMessageDialog(null, "Depois do while");
+
+Conexao.rs.next();
+
+Id_Veiculo = Conexao.rs.getString("Pecas_idPecas");
+
+//                    JOptionPane.showMessageDialog(null, Id_Veiculo);
+
+ModItens_Pecas.setId_Peca(Integer.parseInt(Id_Veiculo));
+
+//                    JOptionPane.showMessageDialog(null, "Mod Itens "+ModItens_Pecas.getId_Peca());
+
+
+//Devolver itens ao Estoque
+ConexaoItem.conexao();
+ConexaoItem.executaSQL("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on estoque.`Pecas_idPecas` = itensvenda_pecas.`Pecas_idPecas` WHERE itensvenda_pecas.`Venda_pecas_idVenda_pecas`='"+jTextFieldcodigovenda.getText()+"' and `idPecas`='"+Id_Veiculo+"'");
+
+ConexaoItem.rs.first();
+
+Quant_estoque = Integer.parseInt(ConexaoItem.rs.getString("Quant_em_estoque"));
+quant = Integer.parseInt(ConexaoItem.rs.getString("Quantidade_pecas"));
+res = (Quant_estoque + quant);
+
+ModItens_Pecas.setQuantidade_pecas(res);
+ControlVendas_Pecas.Devolver_ItemEstoque(ModItens_Pecas);
+//           JOptionPane.showMessageDialog(null, "Item Removido");
+
+    }
+    
+    //Catch Loop
+} catch (SQLException ex)  {
+    
+    
+    
+    
+    
+    //Deletar Venda
+    Conexao.conexao();
+    
+    Conexao.executaSQLupdates("DELETE FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas`='"+Integer.parseInt(jTextFieldcodigovenda.getText())+"'");
+    Conexao.executaSQLupdates("DELETE FROM venda_pecas WHERE `idVenda_pecas`='"+Integer.parseInt(jTextFieldcodigovenda.getText())+"'");
+    
+    JOptionPane.showMessageDialog(null, "Cadastro Removido com Sucesso!");
+    
+    jButtonLimparActionPerformed(evt);
+    
+    Conexao.desconecta();
+    
+}
+
+        }
+        
+    }
+    
+
+} catch (SQLException ex)  {
+    
+    JOptionPane.showMessageDialog(null, "Registro Não Localizado!");
+    
+    Conexao.desconecta();
+    
+}
+
+        } catch (SQLException ex)  {
+
+                    if(JOptionPane.showConfirmDialog(null, "Confirmar Exclusão da Venda", "Pergunta", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)== JOptionPane.YES_NO_OPTION){
+
+    //Deletar Venda
+    Conexao.conexao();
+    
+    Conexao.executaSQLupdates("DELETE FROM venda_pecas WHERE `idVenda_pecas`='"+Integer.parseInt(jTextFieldcodigovenda.getText())+"'");
+    
+    JOptionPane.showMessageDialog(null, "Cadastro Removido com Sucesso!");
+    
+    jButtonLimparActionPerformed(evt);
+    
+    Conexao.desconecta();
+    
+        
+                    }        
+        } 
+        
+
+}
+
+
+        
+    }//GEN-LAST:event_jButtonExcluirActionPerformed
+
+    private void jButtonAtualizar_RegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAtualizar_RegistroActionPerformed
+        // TODO add your handling code here:
+        
+        ModVenda_Pecas.setIdVenda_Pecas(Integer.parseInt(jTextFieldcodigovenda.getText()));
+
+        ModVenda_Pecas.setData_VendaPecas(jTextFieldcpfcliente.getText());
+        ModVenda_Pecas.setIDFuncionario_Vendedor(Integer.parseInt(jTextFieldCod_Vendedor.getText()));
+        ModVenda_Pecas.setIDCliente(Integer.parseInt(jTextFieldcodigocliente.getText()));
+        ModVenda_Pecas.setTotal_Venda(Float.parseFloat(jTextFieldValor_Pagar.getText()));
+        ModVenda_Pecas.setTotal_desconto(Float.parseFloat(jTextFieldDenconto_total.getText()));
+        ModVenda_Pecas.setTotal_venda_bruto(Float.parseFloat(jTextFieldvalor_venda.getText()));
+        ModVenda_Pecas.setForma_pagamento((String) jComboBoxCondicaoPagamento.getSelectedItem());
+        
+        ControlVendas_Pecas.AtualizarVenda_Pecas(ModVenda_Pecas);
+
+        
+    }//GEN-LAST:event_jButtonAtualizar_RegistroActionPerformed
+
+    private void jTextFieldcodigoclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldcodigoclienteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldcodigoclienteActionPerformed
+
+    private void jButtonPesquisarPecasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisarPecasActionPerformed
+        // TODO add your handling code here:
+        
+        jTextFieldNomePeca.setText("");
+        //jTextFieldquantidade.setText("");
+        //jTextFielddesconto.setText("");
+        jTextFieldprecounitario.setText("");
+//        jTextFieldvalortotal_parcial.setText("");
+  //      jTextFieldvalorfinal.setText("");
+
+
+        ModPecas.setId_pecas(Integer.parseInt(jTextFieldCod_Peca.getText()));
+        
+        ControlVendas_Pecas.Pesquisar_VendasPecas(ModPecas, ModEstoque2);
+        
+        jTextFieldCod_Peca.setText(String.valueOf(ModPecas.getId_pecas()));
+        jTextFieldNomePeca.setText(String.valueOf(ModPecas.getNome_pecas()));
+        jTextField2.setText(String.valueOf(ModPecas.getAplicacao()));
+        jTextFieldprecounitario.setText(String.valueOf(ModEstoque2.getValor_venda_unitario()));
+        jTextFieldDisp_Estoque.setText(String.valueOf(ModEstoque2.getQuantidade_em_Estoque()));
+        jTextFieldquantidade.setText("1");
+
+        //Calcular valor total
+                                    if(jTextFieldquantidade.getText().equals("")){
+                
+                JOptionPane.showMessageDialog(null, "Digite a Quantidade de Peças!");
+                
+            }else{
+                        if(jTextFieldCod_Peca.getText().equals("")){
+                            
+                            JOptionPane.showMessageDialog(null, "Informe o Cód fs Peça!");
+                            
+                        }else{
+            
+        float quant = Float.parseFloat(jTextFieldquantidade.getText()), Preco_Unit = Float.parseFloat(jTextFieldprecounitario.getText()), res;    
+        if((quant > 0) && (Preco_Unit > 0)){
+            
+        res = (Preco_Unit * quant);
+        jTextFieldvalortotal_parcial.setText(String.valueOf(res));
+        
+        
+        
+        //Atualizar valor final                               
+      if(jTextFieldvalortotal_parcial.getText().equals("")){
+                
+                JOptionPane.showMessageDialog(null, "Calcule Valor Total da Venda!");
+                
+            }else{
+                            
+                                if(jTextFielddesconto.getText().equals("")){
+                
+                JOptionPane.showMessageDialog(null, "Informe o % de Desconto!");
+                
+            }else{
+                                
+        float VL_Total = Float.parseFloat(jTextFieldvalortotal_parcial.getText()), Desconto = Float.parseFloat(jTextFielddesconto.getText()), res2;    
+        if((VL_Total >= 0) && (Desconto >= 0)){
+            
+        float desconto_rs;
+        desconto_rs = (Desconto/100);
+        res2 = VL_Total-(VL_Total * desconto_rs);
+        jTextFieldvalorfinal.setText(String.valueOf(res2));
+        
+        jButtonAdicionar.setEnabled(true);   
+        
+        
+                }else{
+            
+            JOptionPane.showMessageDialog(null, "Erro: Verifique os Valores!");
+            jTextFieldvalortotal_parcial.setText("");
+            
+                  }
+                }
+             }
+
+          }
+        }
+      }
+     
+        
+    }//GEN-LAST:event_jButtonPesquisarPecasActionPerformed
+
+    private void jButtonPesquisa_VendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisa_VendedorActionPerformed
+        // TODO add your handling code here:
+
+        try {
+        
+        ModFuncionario.setID_Funcionario(Integer.parseInt(jTextFieldCod_Vendedor.getText()));
+        
+        ControlVendas_Pecas.Pesquisar_Vendedor(ModFuncionario);
+        
+        jTextFieldCod_Vendedor.setText(String.valueOf(ModFuncionario.getID_Funcionario()));
+        jTextFieldNome_Vendedor.setText(String.valueOf(ModFuncionario.getNome_Funcionario()));
+        
+        }catch (NumberFormatException e){
+            
+            JOptionPane.showMessageDialog(null, "Login sem suporte para vendas!");
+            
+        }
+        
+    }//GEN-LAST:event_jButtonPesquisa_VendedorActionPerformed
+
+    private void jTabletabelaItensVendaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabletabelaItensVendaMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTabletabelaItensVendaMouseEntered
+
+    private void jTextFieldquantidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldquantidadeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldquantidadeActionPerformed
+
+    private void jTextFieldvalortotal_parcialMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldvalortotal_parcialMouseClicked
+        // TODO add your handling code here:
+
+/*
+        
+                            if(jTextFieldquantidade.getText().equals("")){
+                
+                JOptionPane.showMessageDialog(null, "Digite a Quantidade de Peças!");
+                
+            }else{
+                        if(jTextFieldCod_Peca.getText().equals("")){
+                            
+                            JOptionPane.showMessageDialog(null, "Informe o Cód fs Peça!");
+                            
+                        }else{
+            
+        float quant = Float.parseFloat(jTextFieldquantidade.getText()), Preco_Unit = Float.parseFloat(jTextFieldprecounitario.getText()), res;    
+        if((quant > 0) && (Preco_Unit > 0)){
+            
+        res = (Preco_Unit * quant);
+        jTextFieldvalortotal_parcial.setText(String.valueOf(res));
+
+        //jTextFieldquantidade.setEditable(false);
+        
+                }else{
+            
+            JOptionPane.showMessageDialog(null, "Erro: Verifique os Valores!");
+            jTextFieldvalortotal_parcial.setText("");
+            
+                }
+            }
+        }
+
+        */
+        
+    }//GEN-LAST:event_jTextFieldvalortotal_parcialMouseClicked
+
+    private void jTextFieldvalorfinalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldvalorfinalMouseClicked
+        // TODO add your handling code here:
+        
+                                    if(jTextFieldvalortotal_parcial.getText().equals("")){
+                
+                JOptionPane.showMessageDialog(null, "Calcule Valor Total da Venda!");
+                
+            }else{
+                            
+                                if(jTextFielddesconto.getText().equals("")){
+                
+                JOptionPane.showMessageDialog(null, "Informe o % de Desconto!");
+                
+            }else{
+                                
+        float VL_Total = Float.parseFloat(jTextFieldvalortotal_parcial.getText()), Desconto = Float.parseFloat(jTextFielddesconto.getText()), res;    
+        if((VL_Total >= 0) && (Desconto >= 0)){
+            
+        float desconto_rs;
+        desconto_rs = (Desconto/100);
+        res = VL_Total-(VL_Total * desconto_rs);
+        jTextFieldvalorfinal.setText(String.valueOf(res));
+        
+        jButtonAdicionar.setEnabled(true);
+        
+        //jTextFieldquantidade.setEditable(false);
+        
+                }else{
+            
+            JOptionPane.showMessageDialog(null, "Erro: Verifique os Valores!");
+            jTextFieldvalorfinal.setText("");
+            
+                }
+            }
+        }
+
+        
+    }//GEN-LAST:event_jTextFieldvalorfinalMouseClicked
+
+    private void jTextFieldquantidadeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldquantidadeMouseClicked
+        // TODO add your handling code here:
+                
+    }//GEN-LAST:event_jTextFieldquantidadeMouseClicked
+
+    private void jButtonProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonProximoActionPerformed
+        // TODO add your handling code here:
+        
+        try {
+      Conexao.conexao();
+        
+Conexao.executaSQL("select * from venda_pecas where idVenda_pecas>'"+jTextFieldcodigovenda.getText()+"'");
+       
+        
+            
+        Conexao.rs.first();
+           
+          String id_proximo = Conexao.rs.getString("idVenda_pecas");
+           
+          jTextFieldcodigovenda.setText(String.valueOf(id_proximo));
+          
+            jButtonPesquisarActionPerformed(evt);
+           
+       } catch (SQLException ex) {
+           
+         JOptionPane.showMessageDialog(null, "Próximo Registro Não Localizado!");
+    
+         
+         
+       }
+        
+    }//GEN-LAST:event_jButtonProximoActionPerformed
+
+    private void jButtonAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAnteriorActionPerformed
+        // TODO add your handling code here:
+        
+        try {
+      Conexao.conexao();
+        
+Conexao.executaSQL("select * from venda_pecas where idVenda_pecas<'"+jTextFieldcodigovenda.getText()+"'");
+       
+        
+            
+        Conexao.rs.last();
+           
+          String id_anterior = Conexao.rs.getString("idVenda_pecas");
+           
+          jTextFieldcodigovenda.setText(String.valueOf(id_anterior));
+          
+            jButtonPesquisarActionPerformed(evt);
+           
+       } catch (SQLException ex) {
+           
+         JOptionPane.showMessageDialog(null, "Registro Anterior Não Localizado!");
+    
+         
+         
+       }
+        
+        
+    }//GEN-LAST:event_jButtonAnteriorActionPerformed
+
+    private void jButtonPesquisaCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisaCliente1ActionPerformed
+        // TODO add your handling code here:
+        
+        String id = jTextFieldcodigocliente.getText();
+        
+        
+        
+                      ModCliente.setPesquisa_ClienteNome(jTextFieldnomecliente.getText());
+
+        JI_VendaPecas.Frm_ClientePesquisa FrmIniciar = new JI_VendaPecas.Frm_ClientePesquisa();
+
+        //FrmIniciar.Recebe_Dados(jTextFieldnomecliente.getText());
+        
+        FrmIniciar.PreencherTabela_PesquisaCliente("select * from cadastro_cliente where nome_cliente like '%"+jTextFieldnomecliente.getText()+"%'");
+
+//        JOptionPane.showMessageDialog(null, "teste");
+        FrmIniciar.setVisible(true);
+      
+
+        
+    }//GEN-LAST:event_jButtonPesquisaCliente1ActionPerformed
+
+    private void jButtonPesquisarPecas1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisarPecas1ActionPerformed
+        // TODO add your handling code here:
+
+
+        
+        ModPecas.setNome_pecas(jTextFieldNomePeca.getText());
+        
+        JI_VendaPecas.Frm_ProdutoPesquisa Frm_ProdutoPesquisa = new JI_VendaPecas.Frm_ProdutoPesquisa();
+        
+        Frm_ProdutoPesquisa.PreencherTabela_PesquisaProduto("select * from pecas inner join estoque on pecas.`idPecas` = estoque.`Pecas_idPecas` where pecas.nome_peca like '%"+jTextFieldNomePeca.getText()+"%'");
+        
+        Frm_ProdutoPesquisa.setVisible(true);
+        
+        
+    }//GEN-LAST:event_jButtonPesquisarPecas1ActionPerformed
+
+    private void jTextFieldquantidadeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldquantidadeFocusGained
+        // TODO add your handling code here:
+       
+        
+ 
+    }//GEN-LAST:event_jTextFieldquantidadeFocusGained
+
+    private void jTextFieldvalortotal_parcialKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldvalortotal_parcialKeyReleased
+        // TODO add your handling code here:
+        
+                                    if(jTextFieldquantidade.getText().equals("")){
+                
+                //JOptionPane.showMessageDialog(null, "Digite a Quantidade de Peças!");
+                
+            }else{
+                        if(jTextFieldCod_Peca.getText().equals("")){
+                            
+                            JOptionPane.showMessageDialog(null, "Informe o Cód fs Peça!");
+                            
+                        }else{
+            
+        float quant = Float.parseFloat(jTextFieldquantidade.getText()), Preco_Unit = Float.parseFloat(jTextFieldprecounitario.getText()), res;    
+        if((quant > 0) && (Preco_Unit > 0)){
+            
+        res = (Preco_Unit * quant);
+        jTextFieldvalortotal_parcial.setText(String.valueOf(res));
+
+        //jTextFieldquantidade.setEditable(false);
+        
+                }else{
+            
+            JOptionPane.showMessageDialog(null, "Erro: Verifique os Valores!");
+            jTextFieldvalortotal_parcial.setText("");
+            
+                }
+            }
+        }
+
+        
+    }//GEN-LAST:event_jTextFieldvalortotal_parcialKeyReleased
+
+    private void jTextFieldvalortotal_parcialKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldvalortotal_parcialKeyPressed
+        // TODO add your handling code here:
+        
+                                  if(jTextFieldquantidade.getText().equals("")){
+                
+                //JOptionPane.showMessageDialog(null, "Digite a Quantidade de Peças!");
+                
+            }else{
+                        if(jTextFieldCod_Peca.getText().equals("")){
+                            
+                            JOptionPane.showMessageDialog(null, "Informe o Cód fs Peça!");
+                            
+                        }else{
+            
+        float quant = Float.parseFloat(jTextFieldquantidade.getText()), Preco_Unit = Float.parseFloat(jTextFieldprecounitario.getText()), res;    
+        if((quant > 0) && (Preco_Unit > 0)){
+            
+        res = (Preco_Unit * quant);
+        jTextFieldvalortotal_parcial.setText(String.valueOf(res));
+
+        //jTextFieldquantidade.setEditable(false);
+        
+                }else{
+            
+            JOptionPane.showMessageDialog(null, "Erro: Verifique os Valores!");
+            jTextFieldvalortotal_parcial.setText("");
+            
+                }
+            }
+        }
+        
+    }//GEN-LAST:event_jTextFieldvalortotal_parcialKeyPressed
+
+    private void jTextFieldvalortotal_parcialKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldvalortotal_parcialKeyTyped
+        // TODO add your handling code here:
+        
+                                  if(jTextFieldquantidade.getText().equals("")){
+                
+                //JOptionPane.showMessageDialog(null, "Digite a Quantidade de Peças!");
+                
+            }else{
+                        if(jTextFieldCod_Peca.getText().equals("")){
+                            
+                            JOptionPane.showMessageDialog(null, "Informe o Cód fs Peça!");
+                            
+                        }else{
+            
+        float quant = Float.parseFloat(jTextFieldquantidade.getText()), Preco_Unit = Float.parseFloat(jTextFieldprecounitario.getText()), res;    
+        if((quant > 0) && (Preco_Unit > 0)){
+            
+        res = (Preco_Unit * quant);
+        jTextFieldvalortotal_parcial.setText(String.valueOf(res));
+
+        //jTextFieldquantidade.setEditable(false);
+        
+                }else{
+            
+            JOptionPane.showMessageDialog(null, "Erro: Verifique os Valores!");
+            jTextFieldvalortotal_parcial.setText("");
+            
+                }
+            }
+        }
+        
+    }//GEN-LAST:event_jTextFieldvalortotal_parcialKeyTyped
+
+    private void jTextFieldquantidadeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldquantidadeKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldquantidadeKeyPressed
+
+    private void jTextFieldquantidadeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldquantidadeKeyReleased
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jTextFieldquantidadeKeyReleased
+
+    private void jTextFieldquantidadeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldquantidadeKeyTyped
+        // TODO add your handling code here:
+       
+    }//GEN-LAST:event_jTextFieldquantidadeKeyTyped
+
+    private void jTextFielddescontoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFielddescontoKeyPressed
+        // TODO add your handling code here:
+        
+                                    if(jTextFieldvalortotal_parcial.getText().equals("")){
+                
+              //  JOptionPane.showMessageDialog(null, "Calcule Valor Total da Venda!");
+                
+            }else{
+                            
+                                if(jTextFielddesconto.getText().equals("")){
+                
+               // JOptionPane.showMessageDialog(null, "Informe o % de Desconto!");
+                
+            }else{
+                                
+        float VL_Total = Float.parseFloat(jTextFieldvalortotal_parcial.getText()), Desconto = Float.parseFloat(jTextFielddesconto.getText()), res;    
+        if((VL_Total >= 0) && (Desconto >= 0)){
+            
+        float desconto_rs;
+        desconto_rs = (Desconto/100);
+        res = VL_Total-(VL_Total * desconto_rs);
+        jTextFieldvalorfinal.setText(String.valueOf(res));
+        
+        jButtonAdicionar.setEnabled(true);
+        
+        //jTextFieldquantidade.setEditable(false);
+        
+                }else{
+            
+            JOptionPane.showMessageDialog(null, "Erro: Verifique os Valores!");
+            jTextFieldvalorfinal.setText("");
+            
+                }
+            }
+        }
+
+        
+    }//GEN-LAST:event_jTextFielddescontoKeyPressed
+
+    private void jTextFielddescontoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFielddescontoKeyReleased
+        // TODO add your handling code here:
+        
+                                    if(jTextFieldvalortotal_parcial.getText().equals("")){
+                
+               // JOptionPane.showMessageDialog(null, "Calcule Valor Total da Venda!");
+                
+            }else{
+                            
+                                if(jTextFielddesconto.getText().equals("")){
+                
+              //  JOptionPane.showMessageDialog(null, "Informe o % de Desconto!");
+                
+            }else{
+                                
+        float VL_Total = Float.parseFloat(jTextFieldvalortotal_parcial.getText()), Desconto = Float.parseFloat(jTextFielddesconto.getText()), res;    
+        if((VL_Total >= 0) && (Desconto >= 0)){
+            
+        float desconto_rs;
+        desconto_rs = (Desconto/100);
+        res = VL_Total-(VL_Total * desconto_rs);
+        jTextFieldvalorfinal.setText(String.valueOf(res));
+        
+        jButtonAdicionar.setEnabled(true);
+        
+        //jTextFieldquantidade.setEditable(false);
+        
+                }else{
+            
+            JOptionPane.showMessageDialog(null, "Erro: Verifique os Valores!");
+            jTextFieldvalorfinal.setText("");
+            
+                }
+            }
+        }
+
+        
+    }//GEN-LAST:event_jTextFielddescontoKeyReleased
+
+    private void jTextFielddescontoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFielddescontoKeyTyped
+        // TODO add your handling code here:
+        
+                                    if(jTextFieldvalortotal_parcial.getText().equals("")){
+                
+               // JOptionPane.showMessageDialog(null, "Calcule Valor Total da Venda!");
+                
+            }else{
+                            
+                                if(jTextFielddesconto.getText().equals("")){
+                
+                // JOptionPane.showMessageDialog(null, "Informe o % de Desconto!");
+                
+            }else{
+                                
+        float VL_Total = Float.parseFloat(jTextFieldvalortotal_parcial.getText()), Desconto = Float.parseFloat(jTextFielddesconto.getText()), res;    
+        if((VL_Total >= 0) && (Desconto >= 0)){
+            
+        float desconto_rs;
+        desconto_rs = (Desconto/100);
+        res = VL_Total-(VL_Total * desconto_rs);
+        jTextFieldvalorfinal.setText(String.valueOf(res));
+        
+        jButtonAdicionar.setEnabled(true);
+        
+        //jTextFieldquantidade.setEditable(false);
+        
+                }else{
+            
+            JOptionPane.showMessageDialog(null, "Erro: Verifique os Valores!");
+            jTextFieldvalorfinal.setText("");
+            
+                }
+            }
+        }
+
+        
+    }//GEN-LAST:event_jTextFielddescontoKeyTyped
+
+    private void jTextFieldTrocoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldTrocoKeyPressed
+        // TODO add your handling code here:
+        
+        
+        
+        
+    }//GEN-LAST:event_jTextFieldTrocoKeyPressed
+
+    private void jTextFieldDinheiroKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDinheiroKeyPressed
+        // TODO add your handling code here:
+
+        NumberFormat DinheiroUS = NumberFormat.getNumberInstance(localeUS);
+        DinheiroUS.setMaximumFractionDigits(2);
+          
+        
+                          if(jTextFieldValor_Pagar.getText().equals("")){
+                
+                              
+            }else{
+                        if(jTextFieldDinheiro.getText().equals("")){
+            
+                            jTextFieldTroco.setText("");
+                            
+                        }else{
+
+                            try{
+                            
+        float VL_Pagar = Float.parseFloat(jTextFieldValor_Pagar.getText()), Dinheiro = Float.parseFloat(jTextFieldDinheiro.getText()), res;    
+        if((Dinheiro >= VL_Pagar)){
+            
+            
+        res = (Dinheiro - VL_Pagar);
+        jTextFieldTroco.setText(String.valueOf(DinheiroUS.format(res)));
+
+        
+        //jTextFieldquantidade.setEditable(false);
+        
+                
+
+        }else{
+            
+            if(Dinheiro < VL_Pagar){
+                
+                jTextFieldTroco.setText("");
+                
+            }else{
+            
+            JOptionPane.showMessageDialog(null, "Erro: Verifique os Valores!");
+            
+            jTextFieldTroco.setText("");
+            jTextFieldDinheiro.setText("");
+        
+            
+                }
+        
+        }
+        
+                            }catch(NumberFormatException e){
+            
+                                jTextFieldTroco.setText("");
+                                jTextFieldDinheiro.setText("");
+        
+                                
+             }
+    
+        }        
+                        
+    }
+        
+    }//GEN-LAST:event_jTextFieldDinheiroKeyPressed
+
+    private void jTextFieldDinheiroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDinheiroKeyReleased
+        // TODO add your handling code here:
+
+NumberFormat DinheiroUS = NumberFormat.getNumberInstance(localeUS);
+        DinheiroUS.setMaximumFractionDigits(2);
+          
+        
+                          if(jTextFieldValor_Pagar.getText().equals("")){
+                
+                              
+            }else{
+                        if(jTextFieldDinheiro.getText().equals("")){
+            
+                            jTextFieldTroco.setText("");
+                            
+                        }else{
+
+                            try{
+                            
+        float VL_Pagar = Float.parseFloat(jTextFieldValor_Pagar.getText()), Dinheiro = Float.parseFloat(jTextFieldDinheiro.getText()), res;    
+        if((Dinheiro >= VL_Pagar)){
+            
+            
+        res = (Dinheiro - VL_Pagar);
+        jTextFieldTroco.setText(String.valueOf(DinheiroUS.format(res)));
+
+        
+        //jTextFieldquantidade.setEditable(false);
+        
+                
+
+        }else{
+            
+            if(Dinheiro < VL_Pagar){
+                
+                jTextFieldTroco.setText("");
+                
+            }else{
+            
+            JOptionPane.showMessageDialog(null, "Erro: Verifique os Valores!");
+            
+            jTextFieldTroco.setText("");
+            jTextFieldDinheiro.setText("");
+        
+            
+                }
+        
+        }
+        
+                            }catch(NumberFormatException e){
+            
+                                jTextFieldTroco.setText("");
+                                jTextFieldDinheiro.setText("");
+        
+                                
+             }
+    
+        }        
+                        
+    }        
+        
+    }//GEN-LAST:event_jTextFieldDinheiroKeyReleased
+
+    private void jComboBoxCondicaoPagamentoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jComboBoxCondicaoPagamentoKeyPressed
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_jComboBoxCondicaoPagamentoKeyPressed
+
+    private void jComboBoxCondicaoPagamentoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBoxCondicaoPagamentoMousePressed
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_jComboBoxCondicaoPagamentoMousePressed
+
+    private void jComboBoxCondicaoPagamentoMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBoxCondicaoPagamentoMouseReleased
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jComboBoxCondicaoPagamentoMouseReleased
+
+    private void jComboBoxCondicaoPagamentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBoxCondicaoPagamentoMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jComboBoxCondicaoPagamentoMouseClicked
+
+    private void jComboBoxCondicaoPagamentoMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBoxCondicaoPagamentoMouseExited
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_jComboBoxCondicaoPagamentoMouseExited
+
+    private void jComboBoxCondicaoPagamentoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBoxCondicaoPagamentoMouseEntered
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_jComboBoxCondicaoPagamentoMouseEntered
+
+    private void jComboBoxCondicaoPagamentoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jComboBoxCondicaoPagamentoFocusGained
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jComboBoxCondicaoPagamentoFocusGained
+
+    private void jComboBoxCondicaoPagamentoMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBoxCondicaoPagamentoMouseMoved
+        // TODO add your handling code here:
+        
+        
+
+        
+    }//GEN-LAST:event_jComboBoxCondicaoPagamentoMouseMoved
+
+    private void jComboBoxCondicaoPagamentoMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBoxCondicaoPagamentoMouseDragged
+        // TODO add your handling code here:
+        
+        
+
+        
+    }//GEN-LAST:event_jComboBoxCondicaoPagamentoMouseDragged
+
+    private void jComboBoxCondicaoPagamentoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxCondicaoPagamentoItemStateChanged
+        // TODO add your handling code here:
+                       
+        String FR_Pag = (String) jComboBoxCondicaoPagamento.getSelectedItem();
+        
+        
+        if(jTextFieldcodigovenda.getText().equals("")){
+            
+      
+            
+        }else{
+        
+             
+            
+        if(FR_Pag != "A Prazo"){
+            
+            jTextFieldDinheiro.setText("");
+            jTextFieldTroco.setText("");
+            jTextFieldDinheiro.setEditable(true);
+                        
+            jTextFieldVL_Entrada.setText("0");
+        jTextFieldJuros.setText("0");
+        jSpinnerParcelas.setValue(1);
+        jTextFieldTotal_Prazo.setText("0");
+        jTextFieldvalorparcelas.setText("0");
+        
+        jTextField1Parcela.setText("");
+        jTextField2Parcela.setText("");
+        jTextField3Parcela.setText("");
+            
+            Desabilitar_Pagamento_Prazo();
+
+            
+            
+        }
+        
+            if(FR_Pag != "Cartão de Credito"){
+
+                jTextFieldDinheiro.setText("");
+                jTextFieldTroco.setText("");
+            jTextFieldDinheiro.setEditable(true);
+                
+        jTextFieldVL_Entrada.setText("0");
+        jTextFieldJuros.setText("0");
+        jSpinnerParcelas.setValue(1);
+        jTextFieldTotal_Prazo.setText("0");
+        jTextFieldvalorparcelas.setText("0");
+        
+                
+                Desabilitar_Pagamento_Cartao();
+                           
+            }
+            
+        if(FR_Pag == "A Prazo"){
+    
+            try{
+            
+            jTextFieldDinheiro.setText("");
+            jTextFieldTroco.setText("");
+            jTextFieldDinheiro.setEditable(false);
+            
+            jLabelTipo_Pagamento.setText("Venda A Prazo");
+            
+            Habilitar_Pagamento_Prazo();
+            
+            //Calcular 
+                Float Valor_Pagar = Float.parseFloat(jTextFieldValor_Pagar.getText()), Valor_Entrada = Float.parseFloat(jTextFieldVL_Entrada.getText());
+                Float Juros = Float.parseFloat(jTextFieldJuros.getText()), ResJuros, ResTotal, ResParcela;
+                int Quant_Parcelas = (int) jSpinnerParcelas.getValue();
+                
+                //Juros
+                ResJuros = (Juros*Quant_Parcelas)/100;
+                
+                //Total
+                ResTotal = (Valor_Pagar-Valor_Entrada)*ResJuros+Valor_Pagar-Valor_Entrada;
+
+                jTextFieldTotal_Prazo.setText(String.valueOf(ResTotal));
+                
+                //Parcelas
+                ResParcela = (ResTotal/Quant_Parcelas);
+                jTextFieldvalorparcelas.setText(String.valueOf(ResParcela));
+                
+
+    //Parcelas
+    Date d = new Date();
+    
+    LocalDate Local = LocalDate.now();
+    
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm ");
+    
+    //System.out.print("hoje "+sdf.format(d));
+    
+    
+    LocalDate Amanha = Local.plusMonths(1);  
+    
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    String Parcela1 = formatter.format(Amanha);
+          
+    jTextField1Parcela.setText(String.valueOf(Parcela1));
+    
+    
+    }catch(NumberFormatException d){
+                    Preencher_FormaPagamento();
+                }
+    
+    
+        }
+            
+            if(FR_Pag == "Cartão de Credito"){
+
+                try{
+                
+                jTextFieldDinheiro.setText("");
+                jTextFieldTroco.setText("");
+            jTextFieldDinheiro.setEditable(false);
+                
+                jLabelTipo_Pagamento.setText("Venda Cartão de Credito");
+                
+                Habilitar_Pagamento_Cartao();
+                
+                //Calcular 
+                Float Valor_Pagar = Float.parseFloat(jTextFieldValor_Pagar.getText()), Valor_Entrada = Float.parseFloat(jTextFieldVL_Entrada.getText());
+                Float Juros = Float.parseFloat(jTextFieldJuros.getText()), ResJuros, ResTotal, ResParcela;
+                int Quant_Parcelas = (int) jSpinnerParcelas.getValue();
+                
+                //Juros
+                ResJuros = (Juros*Quant_Parcelas)/100;
+                
+                //Total
+                ResTotal = (Valor_Pagar-Valor_Entrada)*ResJuros+Valor_Pagar-Valor_Entrada;
+
+                jTextFieldTotal_Prazo.setText(String.valueOf(ResTotal));
+                
+                //Parcelas
+                ResParcela = (ResTotal/Quant_Parcelas);
+                jTextFieldvalorparcelas.setText(String.valueOf(ResParcela));
+                
+                //Limpar Parcelas
+                jTextField1Parcela.setText("");
+                jTextField2Parcela.setText("");
+                jTextField3Parcela.setText("");
+                
+                }catch(NumberFormatException e){
+                    Preencher_FormaPagamento();
+                }
+                
+                    }
+            
+                
+        }
+        
+
+        
+    }//GEN-LAST:event_jComboBoxCondicaoPagamentoItemStateChanged
+
+    private void jSpinnerParcelasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jSpinnerParcelasKeyPressed
+        // TODO add your handling code here:
+        
+                
+        
+    }//GEN-LAST:event_jSpinnerParcelasKeyPressed
+
+    private void jSpinnerParcelasKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jSpinnerParcelasKeyReleased
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jSpinnerParcelasKeyReleased
+
+    private void jSpinnerParcelasStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerParcelasStateChanged
+        // TODO add your handling code here:
+        
+        //Calcular
+                String Pagamento = (String) jComboBoxCondicaoPagamento.getSelectedItem();
+                Float Valor_Pagar = Float.parseFloat(jTextFieldValor_Pagar.getText()), Valor_Entrada = Float.parseFloat(jTextFieldVL_Entrada.getText());
+                Float Juros = Float.parseFloat(jTextFieldJuros.getText()), ResJuros, ResTotal, ResParcela;
+                int Quant_Parcelas = (int) jSpinnerParcelas.getValue();
+                
+                //Juros
+                ResJuros = (Juros*Quant_Parcelas)/100;
+                
+                //Total
+                ResTotal = (Valor_Pagar-Valor_Entrada)*ResJuros+Valor_Pagar-Valor_Entrada;
+
+                jTextFieldTotal_Prazo.setText(String.valueOf(ResTotal));
+                
+                //Parcelas
+                ResParcela = (ResTotal/Quant_Parcelas);
+                jTextFieldvalorparcelas.setText(String.valueOf(ResParcela));
+
+int Parcelas =  (int) jSpinnerParcelas.getValue();
+
+if((Parcelas ==1) && (Pagamento == "A Prazo")){
+    
+    //Parcelas
+    Date d = new Date();
+    
+    LocalDate Local = LocalDate.now();
+    
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm ");
+    
+    //System.out.print("hoje "+sdf.format(d));
+    
+    
+    LocalDate Amanha = Local.plusMonths(1);  
+    
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    String Parcela1 = formatter.format(Amanha);
+          
+    jTextField1Parcela.setText(String.valueOf(Parcela1));
+    
+    //Limpar Parcelas
+    jTextField2Parcela.setText("");
+    jTextField3Parcela.setText("");
+    
+}else{
+    
+if((Parcelas == 2) && (Pagamento == "A Prazo")){
+    
+    //Parcelas
+    Date d = new Date();
+    
+    LocalDate Local = LocalDate.now();
+    
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm ");
+    
+    //System.out.print("hoje "+sdf.format(d));
+    
+    
+    LocalDate Amanha = Local.plusMonths(2);  
+    
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    String Parcela1 = formatter.format(Amanha);
+          
+    jTextField2Parcela.setText(String.valueOf(Parcela1));
+    
+    //Limpar Parcelas
+    jTextField3Parcela.setText("");
+    
+}else{
+    
+if((Parcelas == 3) && (Pagamento == "A Prazo")){
+    
+    //Parcelas
+    Date d = new Date();
+    
+    LocalDate Local = LocalDate.now();
+    
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm ");
+    
+    //System.out.print("hoje "+sdf.format(d));
+    
+    
+    LocalDate Amanha = Local.plusMonths(3);  
+    
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    String Parcela1 = formatter.format(Amanha);
+          
+    jTextField3Parcela.setText(String.valueOf(Parcela1));
+    
+    
+        }
+    }
+}
+                
+        
+    }//GEN-LAST:event_jSpinnerParcelasStateChanged
+
+    private void jSpinnerParcelasKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jSpinnerParcelasKeyTyped
+        // TODO add your handling code here:
+        
+                
+        
+    }//GEN-LAST:event_jSpinnerParcelasKeyTyped
+
+    private void jTextFieldVL_EntradaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldVL_EntradaKeyPressed
+        // TODO add your handling code here:
+        
+        //Calcular 
+                Float Valor_Pagar = Float.parseFloat(jTextFieldValor_Pagar.getText()), Valor_Entrada = Float.parseFloat(jTextFieldVL_Entrada.getText());
+                Float Juros = Float.parseFloat(jTextFieldJuros.getText()), ResJuros, ResTotal, ResParcela;
+                int Quant_Parcelas = (int) jSpinnerParcelas.getValue();
+                
+                //Juros
+                ResJuros = (Juros*Quant_Parcelas)/100;
+                
+                //Total
+                ResTotal = (Valor_Pagar-Valor_Entrada)*ResJuros+Valor_Pagar-Valor_Entrada;
+
+                jTextFieldTotal_Prazo.setText(String.valueOf(ResTotal));
+                
+                //Parcelas
+                ResParcela = (ResTotal/Quant_Parcelas);
+                jTextFieldvalorparcelas.setText(String.valueOf(ResParcela));
+                
+                
+    }//GEN-LAST:event_jTextFieldVL_EntradaKeyPressed
+
+    private void jTextFieldVL_EntradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldVL_EntradaKeyReleased
+        // TODO add your handling code here:
+        
+        //Calcular 
+                Float Valor_Pagar = Float.parseFloat(jTextFieldValor_Pagar.getText()), Valor_Entrada = Float.parseFloat(jTextFieldVL_Entrada.getText());
+                Float Juros = Float.parseFloat(jTextFieldJuros.getText()), ResJuros, ResTotal, ResParcela;
+                int Quant_Parcelas = (int) jSpinnerParcelas.getValue();
+                
+                //Juros
+                ResJuros = (Juros*Quant_Parcelas)/100;
+                
+                //Total
+                ResTotal = (Valor_Pagar-Valor_Entrada)*ResJuros+Valor_Pagar-Valor_Entrada;
+
+                jTextFieldTotal_Prazo.setText(String.valueOf(ResTotal));
+                
+                //Parcelas
+                ResParcela = (ResTotal/Quant_Parcelas);
+                jTextFieldvalorparcelas.setText(String.valueOf(ResParcela));
+                
+        
+        
+        
+    }//GEN-LAST:event_jTextFieldVL_EntradaKeyReleased
+
+    private void jTextFieldVL_EntradaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldVL_EntradaKeyTyped
+        // TODO add your handling code here:
+
+        
+        //Calcular 
+                Float Valor_Pagar = Float.parseFloat(jTextFieldValor_Pagar.getText()), Valor_Entrada = Float.parseFloat(jTextFieldVL_Entrada.getText());
+                Float Juros = Float.parseFloat(jTextFieldJuros.getText()), ResJuros, ResTotal, ResParcela;
+                int Quant_Parcelas = (int) jSpinnerParcelas.getValue();
+                
+                //Juros
+                ResJuros = (Juros*Quant_Parcelas)/100;
+                
+                //Total
+                ResTotal = (Valor_Pagar-Valor_Entrada)*ResJuros+Valor_Pagar-Valor_Entrada;
+
+                jTextFieldTotal_Prazo.setText(String.valueOf(ResTotal));
+                
+                //Parcelas
+                ResParcela = (ResTotal/Quant_Parcelas);
+                jTextFieldvalorparcelas.setText(String.valueOf(ResParcela));
+                
+                        
+        
+    }//GEN-LAST:event_jTextFieldVL_EntradaKeyTyped
+
+    private void jTextFieldJurosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldJurosKeyPressed
+        // TODO add your handling code here:
+                        
+        //Calcular 
+                Float Valor_Pagar = Float.parseFloat(jTextFieldValor_Pagar.getText()), Valor_Entrada = Float.parseFloat(jTextFieldVL_Entrada.getText());
+                Float Juros = Float.parseFloat(jTextFieldJuros.getText()), ResJuros, ResTotal, ResParcela;
+                int Quant_Parcelas = (int) jSpinnerParcelas.getValue();
+                
+                //Juros
+                ResJuros = (Juros*Quant_Parcelas)/100;
+                
+                //Total
+                ResTotal = (Valor_Pagar-Valor_Entrada)*ResJuros+Valor_Pagar-Valor_Entrada;
+
+                jTextFieldTotal_Prazo.setText(String.valueOf(ResTotal));
+                
+                //Parcelas
+                ResParcela = (ResTotal/Quant_Parcelas);
+                jTextFieldvalorparcelas.setText(String.valueOf(ResParcela));
+        
+        
+    }//GEN-LAST:event_jTextFieldJurosKeyPressed
+
+    private void jTextFieldJurosKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldJurosKeyReleased
+
+
+                //Calcular 
+                Float Valor_Pagar = Float.parseFloat(jTextFieldValor_Pagar.getText()), Valor_Entrada = Float.parseFloat(jTextFieldVL_Entrada.getText());
+                Float Juros = Float.parseFloat(jTextFieldJuros.getText()), ResJuros, ResTotal, ResParcela;
+                int Quant_Parcelas = (int) jSpinnerParcelas.getValue();
+                
+                //Juros
+                ResJuros = (Juros*Quant_Parcelas)/100;
+                
+                //Total
+                ResTotal = (Valor_Pagar-Valor_Entrada)*ResJuros+Valor_Pagar-Valor_Entrada;
+
+                jTextFieldTotal_Prazo.setText(String.valueOf(ResTotal));
+                
+                //Parcelas
+                ResParcela = (ResTotal/Quant_Parcelas);
+                jTextFieldvalorparcelas.setText(String.valueOf(ResParcela));
+
+        
+
+    }//GEN-LAST:event_jTextFieldJurosKeyReleased
+
+    private void jComboBoxCondicaoPagamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCondicaoPagamentoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxCondicaoPagamentoActionPerformed
+
+    private void jTextFieldJurosVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_jTextFieldJurosVetoableChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldJurosVetoableChange
+
+    private void jTextFieldJurosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldJurosKeyTyped
+        // TODO add your handling code here:
+        
+                //Calcular 
+                Float Valor_Pagar = Float.parseFloat(jTextFieldValor_Pagar.getText()), Valor_Entrada = Float.parseFloat(jTextFieldVL_Entrada.getText());
+                Float Juros = Float.parseFloat(jTextFieldJuros.getText()), ResJuros, ResTotal, ResParcela;
+                int Quant_Parcelas = (int) jSpinnerParcelas.getValue();
+                
+                //Juros
+                ResJuros = (Juros*Quant_Parcelas)/100;
+                
+                //Total
+                ResTotal = (Valor_Pagar-Valor_Entrada)*ResJuros+Valor_Pagar-Valor_Entrada;
+
+                jTextFieldTotal_Prazo.setText(String.valueOf(ResTotal));
+                
+                //Parcelas
+                ResParcela = (ResTotal/Quant_Parcelas);
+                jTextFieldvalorparcelas.setText(String.valueOf(ResParcela));
+
+        
+    }//GEN-LAST:event_jTextFieldJurosKeyTyped
+
+    private void jButtonFinalizar_VendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFinalizar_VendaActionPerformed
+        // TODO add your handling code here:
+
+        if(jTextFieldcodigovenda.getText().equals("")) {
+         
+            JOptionPane.showMessageDialog(null, "Cód de Venda Não Localizada!");
+            
+        }else{
+            
+            
+            //Verificar
+            if(jComboBoxCondicaoPagamento.getSelectedItem().equals("")){
+     
+                    
+                    JOptionPane.showMessageDialog(null, "Informe a forma de pagamento");
+                    
+                    
+                }else{
+                    
+            
+            if(jComboBoxCondicaoPagamento.getSelectedItem().equals("A Vista") && jTextFieldDinheiro.getText().equals("")){
+                
+                JOptionPane.showMessageDialog(null, "Informe o valor em dinheiro!");
+                
+            }else{
+            
+
+                
+                
+            
+        Hora_Atual_Sistema();
+        
+        String Pagamento = (String) jComboBoxCondicaoPagamento.getSelectedItem();
+        int Parcelas = (int) jSpinnerParcelas.getValue();
+        
+        if(Pagamento == "A Vista"){
+        Hora_Atual_Sistema();
+//        JOptionPane.showMessageDialog(null, "Pagamento a vista");
+        ModVenda_Pecas.setIdVenda_Pecas(Integer.parseInt(jTextFieldcodigovenda.getText()));
+
+        //Data Para Sql
+                String dia = jFormattedTextFieldData_Hora.getText().substring(0,2);
+                String mes = jFormattedTextFieldData_Hora.getText().substring(3,5);
+                String ano = jFormattedTextFieldData_Hora.getText().substring(6,10);
+                String hora = jFormattedTextFieldData_Hora.getText().substring(11,13);
+                String minuto = jFormattedTextFieldData_Hora.getText().substring(14,16);
+                ModVenda_Pecas.setData_VendaPecas(ano+"-"+mes+"-"+dia+" "+hora+":"+minuto);
+
+//        JOptionPane.showMessageDialog(null, ModVenda_Pecas.getData_VendaPecas());
+
+        ModVenda_Pecas.setIDFuncionario_Vendedor(Integer.parseInt(jTextFieldCod_Vendedor.getText()));
+        ModVenda_Pecas.setIDCliente(Integer.parseInt(jTextFieldcodigocliente.getText()));
+        ModVenda_Pecas.setTotal_Venda(Float.parseFloat(jTextFieldValor_Pagar.getText()));
+        ModVenda_Pecas.setTotal_desconto(Float.parseFloat(jTextFieldDenconto_total.getText()));
+        ModVenda_Pecas.setTotal_venda_bruto(Float.parseFloat(jTextFieldvalor_venda.getText()));
+        ModVenda_Pecas.setForma_pagamento((String) jComboBoxCondicaoPagamento.getSelectedItem());
+
+        ModVenda_Pecas.setVencimento1(null);
+        ModVenda_Pecas.setVencimento2(null);
+        ModVenda_Pecas.setVencimento3(null);
+
+        ModVenda_Pecas.setSituacao("Finalizada");
+
+//        ControlVendas_Pecas.AtualizarVenda_Pecas(ModVenda_Pecas);
+
+        VendasBO.FinalizarVenda_Avista(ModVenda_Pecas);
+        
+        //Atualizar Liquido
+        ConexaoLiquido.conexao();
+        ConexaoLiquido.executaSQL("SELECT SUM(`Total_venda`) FROM venda_pecas WHERE `Forma_Pagamento` ='"+"A Vista"+"'");
+            try {
+                ConexaoLiquido.rs.first();
+                
+                ModVenda_Pecas.setLiquido(Float.parseFloat(jTextFieldValor_Pagar.getText()));
+                
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Erro ao atualizar valor líquido");
+            }
+           
+            ControlVendas_Pecas.Atualizar_Liquido(ModVenda_Pecas);
+
+        
+            jButtonPesquisarActionPerformed(evt);
+        
+        }else{
+            
+        if(Pagamento == "Cartão de Credito"){
+        Hora_Atual_Sistema();
+//        JOptionPane.showMessageDialog(null, "Pagamento cartão de credito");
+        ModVenda_Pecas.setIdVenda_Pecas(Integer.parseInt(jTextFieldcodigovenda.getText()));
+
+        //Data Para Sql
+                String dia = jFormattedTextFieldData_Hora.getText().substring(0,2);
+                String mes = jFormattedTextFieldData_Hora.getText().substring(3,5);
+                String ano = jFormattedTextFieldData_Hora.getText().substring(6,10);
+                String hora = jFormattedTextFieldData_Hora.getText().substring(11,13);
+                String minuto = jFormattedTextFieldData_Hora.getText().substring(14,16);
+                ModVenda_Pecas.setData_VendaPecas(ano+"-"+mes+"-"+dia+" "+hora+":"+minuto);
+
+//        JOptionPane.showMessageDialog(null, ModVenda_Pecas.getData_VendaPecas());
+        
+        ModVenda_Pecas.setIDFuncionario_Vendedor(Integer.parseInt(jTextFieldCod_Vendedor.getText()));
+        ModVenda_Pecas.setIDCliente(Integer.parseInt(jTextFieldcodigocliente.getText()));
+        ModVenda_Pecas.setTotal_Venda(Float.parseFloat(jTextFieldValor_Pagar.getText()));
+        ModVenda_Pecas.setTotal_desconto(Float.parseFloat(jTextFieldDenconto_total.getText()));
+        ModVenda_Pecas.setTotal_venda_bruto(Float.parseFloat(jTextFieldvalor_venda.getText()));
+        ModVenda_Pecas.setForma_pagamento((String) jComboBoxCondicaoPagamento.getSelectedItem());
+    
+        
+        ModVenda_Pecas.setValor_Entrada(Float.parseFloat(jTextFieldVL_Entrada.getText()));
+        ModVenda_Pecas.setPercentual_Juros_AM(Float.parseFloat(jTextFieldJuros.getText()));
+        ModVenda_Pecas.setQuant_Parcelas((int) jSpinnerParcelas.getValue());
+        ModVenda_Pecas.setTotal_Prazo(Float.parseFloat(jTextFieldTotal_Prazo.getText()));
+        ModVenda_Pecas.setValor_Parcelas(Float.parseFloat(jTextFieldvalorparcelas.getText()));
+        
+        ModVenda_Pecas.setVencimento1(null);
+        ModVenda_Pecas.setVencimento2(null);
+        ModVenda_Pecas.setVencimento3(null);
+        
+        ModVenda_Pecas.setSituacao("Finalizada");
+        
+//        ControlVendas_Pecas.AtualizarVenda_Pecas(ModVenda_Pecas);
+        
+        VendasBO.FinalizarVenda_Cartaocredito(ModVenda_Pecas);
+
+        jButtonPesquisarActionPerformed(evt);
+        
+        }else{
+            
+        if((Pagamento == "A Prazo") && (Parcelas == 1)){
+        Hora_Atual_Sistema();
+//        JOptionPane.showMessageDialog(null, "Pagamento a prazo com 1 parcela");
+        ModVenda_Pecas.setIdVenda_Pecas(Integer.parseInt(jTextFieldcodigovenda.getText()));
+
+                //Data Para Sql
+                String dia = jFormattedTextFieldData_Hora.getText().substring(0,2);
+                String mes = jFormattedTextFieldData_Hora.getText().substring(3,5);
+                String ano = jFormattedTextFieldData_Hora.getText().substring(6,10);
+                String hora = jFormattedTextFieldData_Hora.getText().substring(11,13);
+                String minuto = jFormattedTextFieldData_Hora.getText().substring(14,16);
+                ModVenda_Pecas.setData_VendaPecas(ano+"-"+mes+"-"+dia+" "+hora+":"+minuto);
+
+//        JOptionPane.showMessageDialog(null, ModVenda_Pecas.getData_VendaPecas());
+
+        
+        ModVenda_Pecas.setIDFuncionario_Vendedor(Integer.parseInt(jTextFieldCod_Vendedor.getText()));
+        ModVenda_Pecas.setIDCliente(Integer.parseInt(jTextFieldcodigocliente.getText()));
+        ModVenda_Pecas.setTotal_Venda(Float.parseFloat(jTextFieldValor_Pagar.getText()));
+        ModVenda_Pecas.setTotal_desconto(Float.parseFloat(jTextFieldDenconto_total.getText()));
+        ModVenda_Pecas.setTotal_venda_bruto(Float.parseFloat(jTextFieldvalor_venda.getText()));
+        ModVenda_Pecas.setForma_pagamento((String) jComboBoxCondicaoPagamento.getSelectedItem());
+    
+        
+        ModVenda_Pecas.setValor_Entrada(Float.parseFloat(jTextFieldVL_Entrada.getText()));
+        ModVenda_Pecas.setPercentual_Juros_AM(Float.parseFloat(jTextFieldJuros.getText()));
+        ModVenda_Pecas.setQuant_Parcelas((int) jSpinnerParcelas.getValue());
+        ModVenda_Pecas.setTotal_Prazo(Float.parseFloat(jTextFieldTotal_Prazo.getText()));
+        ModVenda_Pecas.setValor_Parcelas(Float.parseFloat(jTextFieldvalorparcelas.getText()));
+
+        
+        //Data Para Sql
+        String dia1 = jTextField1Parcela.getText().substring(0,2);
+        String mes1 = jTextField1Parcela.getText().substring(3,5);
+        String ano1 = jTextField1Parcela.getText().substring(6);
+        ModVenda_Pecas.setVencimento1(ano1+"-"+mes1+"-"+dia1);
+      
+        ModVenda_Pecas.setVencimento2(null);
+        ModVenda_Pecas.setVencimento3(null);
+        
+        ModVenda_Pecas.setSituacao("Finalizada");
+        
+//        ControlVendas_Pecas.AtualizarVenda_Pecas(ModVenda_Pecas);
+
+          VendasBO.FinalizarVenda_Prazo(ModVenda_Pecas);
+
+
+        /*
+        //Atualizar Liquido (Prazo)
+        ConexaoLiquido.conexao();
+        ConexaoLiquido.executaSQL("SELECT SUM(`Total_venda`) FROM venda_pecas WHERE `Forma_Pagamento` ='"+"A Vista"+"'");
+            try {
+                ConexaoLiquido.rs.first();
+                
+                ModVenda_Pecas.setLiquido(ConexaoLiquido.rs.getFloat("SUM(`Total_venda`)"));
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(JI_VendaPecas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+        */
+        
+            ControlVendas_Pecas.Atualizar_Liquido(ModVenda_Pecas);
+
+
+        
+        jButtonPesquisarActionPerformed(evt);
+        
+        }else{
+            
+        if((Pagamento == "A Prazo") && (Parcelas == 2)){
+        Hora_Atual_Sistema();
+//        JOptionPane.showMessageDialog(null, "Pagamento a prazo com 2 parcelas");
+        ModVenda_Pecas.setIdVenda_Pecas(Integer.parseInt(jTextFieldcodigovenda.getText()));
+
+        //Data Para Sql
+                String dia = jFormattedTextFieldData_Hora.getText().substring(0,2);
+                String mes = jFormattedTextFieldData_Hora.getText().substring(3,5);
+                String ano = jFormattedTextFieldData_Hora.getText().substring(6,10);
+                String hora = jFormattedTextFieldData_Hora.getText().substring(11,13);
+                String minuto = jFormattedTextFieldData_Hora.getText().substring(14,16);
+                ModVenda_Pecas.setData_VendaPecas(ano+"-"+mes+"-"+dia+" "+hora+":"+minuto);
+
+//        JOptionPane.showMessageDialog(null, ModVenda_Pecas.getData_VendaPecas());
+
+        
+        ModVenda_Pecas.setIDFuncionario_Vendedor(Integer.parseInt(jTextFieldCod_Vendedor.getText()));
+        ModVenda_Pecas.setIDCliente(Integer.parseInt(jTextFieldcodigocliente.getText()));
+        ModVenda_Pecas.setTotal_Venda(Float.parseFloat(jTextFieldValor_Pagar.getText()));
+        ModVenda_Pecas.setTotal_desconto(Float.parseFloat(jTextFieldDenconto_total.getText()));
+        ModVenda_Pecas.setTotal_venda_bruto(Float.parseFloat(jTextFieldvalor_venda.getText()));
+        ModVenda_Pecas.setForma_pagamento((String) jComboBoxCondicaoPagamento.getSelectedItem());
+    
+        
+        ModVenda_Pecas.setValor_Entrada(Float.parseFloat(jTextFieldVL_Entrada.getText()));
+        ModVenda_Pecas.setPercentual_Juros_AM(Float.parseFloat(jTextFieldJuros.getText()));
+        ModVenda_Pecas.setQuant_Parcelas((int) jSpinnerParcelas.getValue());
+        ModVenda_Pecas.setTotal_Prazo(Float.parseFloat(jTextFieldTotal_Prazo.getText()));
+        ModVenda_Pecas.setValor_Parcelas(Float.parseFloat(jTextFieldvalorparcelas.getText()));
+
+        
+        //Data Para Sql Vencimento 1
+        String dia1 = jTextField1Parcela.getText().substring(0,2);
+        String mes1 = jTextField1Parcela.getText().substring(3,5);
+        String ano1 = jTextField1Parcela.getText().substring(6);
+        ModVenda_Pecas.setVencimento1(ano1+"-"+mes1+"-"+dia1);
+      
+        //Data Para Sql Vencimento 2
+        String dia2 = jTextField2Parcela.getText().substring(0,2);
+        String mes2 = jTextField2Parcela.getText().substring(3,5);
+        String ano2 = jTextField2Parcela.getText().substring(6);
+        ModVenda_Pecas.setVencimento2(ano2+"-"+mes2+"-"+dia2);
+        
+        ModVenda_Pecas.setVencimento3(null);        
+        
+        ModVenda_Pecas.setSituacao("Finalizada");
+        
+//        ControlVendas_Pecas.AtualizarVenda_Pecas(ModVenda_Pecas);
+
+        
+        VendasBO.FinalizarVenda_Prazo(ModVenda_Pecas);
+
+        
+        /*
+        //Atualizar Liquido (Prazo)
+        ConexaoLiquido.conexao();
+        ConexaoLiquido.executaSQL("SELECT SUM(`Total_venda`) FROM venda_pecas WHERE `Forma_Pagamento` ='"+"A Vista"+"'");
+            try {
+                ConexaoLiquido.rs.first();
+                
+                ModVenda_Pecas.setLiquido(ConexaoLiquido.rs.getFloat("SUM(`Total_venda`)"));
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(JI_VendaPecas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+           
+            ControlVendas_Pecas.Atualizar_Liquido(ModVenda_Pecas);
+*/
+        
+        jButtonPesquisarActionPerformed(evt);
+        
+        }else{
+            
+        if((Pagamento == "A Prazo") && (Parcelas == 3)){
+        Hora_Atual_Sistema();
+//        JOptionPane.showMessageDialog(null, "Pagamento a prazo com 3 parcelas");
+        ModVenda_Pecas.setIdVenda_Pecas(Integer.parseInt(jTextFieldcodigovenda.getText()));
+
+        //Data Para Sql
+                String dia = jFormattedTextFieldData_Hora.getText().substring(0,2);
+                String mes = jFormattedTextFieldData_Hora.getText().substring(3,5);
+                String ano = jFormattedTextFieldData_Hora.getText().substring(6,10);
+                String hora = jFormattedTextFieldData_Hora.getText().substring(11,13);
+                String minuto = jFormattedTextFieldData_Hora.getText().substring(14,16);
+                ModVenda_Pecas.setData_VendaPecas(ano+"-"+mes+"-"+dia+" "+hora+":"+minuto);
+
+//        JOptionPane.showMessageDialog(null, ModVenda_Pecas.getData_VendaPecas());
+
+        
+        ModVenda_Pecas.setIDFuncionario_Vendedor(Integer.parseInt(jTextFieldCod_Vendedor.getText()));
+        ModVenda_Pecas.setIDCliente(Integer.parseInt(jTextFieldcodigocliente.getText()));
+        ModVenda_Pecas.setTotal_Venda(Float.parseFloat(jTextFieldValor_Pagar.getText()));
+        ModVenda_Pecas.setTotal_desconto(Float.parseFloat(jTextFieldDenconto_total.getText()));
+        ModVenda_Pecas.setTotal_venda_bruto(Float.parseFloat(jTextFieldvalor_venda.getText()));
+        ModVenda_Pecas.setForma_pagamento((String) jComboBoxCondicaoPagamento.getSelectedItem());
+    
+        
+        ModVenda_Pecas.setValor_Entrada(Float.parseFloat(jTextFieldVL_Entrada.getText()));
+        ModVenda_Pecas.setPercentual_Juros_AM(Float.parseFloat(jTextFieldJuros.getText()));
+        ModVenda_Pecas.setQuant_Parcelas((int) jSpinnerParcelas.getValue());
+        ModVenda_Pecas.setTotal_Prazo(Float.parseFloat(jTextFieldTotal_Prazo.getText()));
+        ModVenda_Pecas.setValor_Parcelas(Float.parseFloat(jTextFieldvalorparcelas.getText()));
+
+        
+        //Data Para Sql Vencimento 1
+        String dia1 = jTextField1Parcela.getText().substring(0,2);
+        String mes1 = jTextField1Parcela.getText().substring(3,5);
+        String ano1 = jTextField1Parcela.getText().substring(6);
+        ModVenda_Pecas.setVencimento1(ano1+"-"+mes1+"-"+dia1);
+      
+        //Data Para Sql Vencimento 2
+        String dia2 = jTextField2Parcela.getText().substring(0,2);
+        String mes2 = jTextField2Parcela.getText().substring(3,5);
+        String ano2 = jTextField2Parcela.getText().substring(6);
+        ModVenda_Pecas.setVencimento2(ano2+"-"+mes2+"-"+dia2);
+        
+        //Data Para Sql Vencimento 3
+        String dia3 = jTextField3Parcela.getText().substring(0,2);
+        String mes3 = jTextField3Parcela.getText().substring(3,5);
+        String ano3 = jTextField3Parcela.getText().substring(6);
+        ModVenda_Pecas.setVencimento3(ano3+"-"+mes3+"-"+dia3);
+        
+        ModVenda_Pecas.setSituacao("Finalizada");
+        
+//        ControlVendas_Pecas.AtualizarVenda_Pecas(ModVenda_Pecas);
+
+        
+        VendasBO.FinalizarVenda_Prazo(ModVenda_Pecas);
+
+
+        /*
+        //Atualizar Liquido (Prazo)
+        ConexaoLiquido.conexao();
+        ConexaoLiquido.executaSQL("SELECT SUM(`Total_venda`) FROM venda_pecas WHERE `Forma_Pagamento` ='"+"A Vista"+"'");
+            try {
+                ConexaoLiquido.rs.first();
+                
+                ModVenda_Pecas.setLiquido(ConexaoLiquido.rs.getFloat("SUM(`Total_venda`)"));
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(JI_VendaPecas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+           
+            ControlVendas_Pecas.Atualizar_Liquido(ModVenda_Pecas);
+*/
+        
+        jButtonPesquisarActionPerformed(evt);
+        
+                        }
+                    }
+                }
+            }
+        }
+   }
+        }
+        }
+            
+        
+    }//GEN-LAST:event_jButtonFinalizar_VendaActionPerformed
+
+    private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
+        // TODO add your handling code here:
+
+        NumberFormat DinheiroUS = NumberFormat.getNumberInstance(localeUS);
+       DinheiroUS.setMaximumFractionDigits(2);
+       
+        
+        String Id_Verificacao=null;
+                      
+        
+        //Cliente for nulo 
+                    if(jTextFieldcodigocliente.getText().equals("")){
+        
+            jTextFieldcodigocliente.setText(String.valueOf("1"));
+            
+            jButtonPesquisaClienteActionPerformed(evt);
+            
+
+        int Estoque_disponivel=0;
+        Conexao.conexao();
+        Conexao.executaSQL("select * from estoque where Pecas_idPecas='"+jTextFieldCod_Peca.getText()+"'");
+
+        try {
+            Conexao.rs.first();
+
+            Estoque_disponivel = Conexao.rs.getInt("Quant_em_estoque");
+
+        } catch (SQLException ex2) {
+            JOptionPane.showMessageDialog(null, "Erro de estoque");
+        }
+
+
+        
+
+        int quant_Item = Integer.parseInt(jTextFieldquantidade.getText());
+        
+
+        
+        if(Estoque_disponivel < quant_Item){
+
+            JOptionPane.showMessageDialog(null, "Quantidade Maior que Disponivel em Estoque!");
+
+            jTextFieldvalortotal_parcial.setText("");
+            jTextFielddesconto.setText("0");
+            jTextFieldvalorfinal.setText("");
+
+            
+        //Se for o primeiro item da venda, iniciar venda e adicionar itens
+        }else{
+        
+            
+            
+            if(jTextFieldcodigovenda.getText().equals("")){
+
+                String Cod_Venda_Pecas; //11/10/2016 23:06
+
+                //Iniciar Venda
+                
+                //Data Para Sql
+                String dia = jFormattedTextFieldData_Hora.getText().substring(0,2);
+                String mes = jFormattedTextFieldData_Hora.getText().substring(3,5);
+                String ano = jFormattedTextFieldData_Hora.getText().substring(6,10);
+                String hora = jFormattedTextFieldData_Hora.getText().substring(11,13);
+                String minuto = jFormattedTextFieldData_Hora.getText().substring(14,16);
+                ModVenda_Pecas.setData_VendaPecas(ano+"-"+mes+"-"+dia+" "+hora+":"+minuto);
+
+//                JOptionPane.showMessageDialog(null, ModVenda_Pecas.getData_VendaPecas());
+
+                ModVenda_Pecas.setData_VendaPecas(ModVenda_Pecas.getData_VendaPecas());
+                ModVenda_Pecas.setIDFuncionario_Vendedor(Integer.parseInt(jTextFieldCod_Vendedor.getText()));
+                ModVenda_Pecas.setIDCliente(Integer.parseInt(jTextFieldcodigocliente.getText()));
+                ModVenda_Pecas.setTotal_Venda(Float.parseFloat(jTextFieldvalorfinal.getText()));
+                ModVenda_Pecas.setSituacao("Em Andamento");
+                
+//                ControlVendas_Pecas.IniciarVenda_Pecas(ModVenda_Pecas);
+                
+                VendasBO.IniciarVendasBO(ModVenda_Pecas);
+
+                
+                jButtonPesquisarActionPerformed(evt);
+                
+                
+                Conexao.conexao();
+                Conexao.executaSQL("select * from venda_pecas");
+
+                try {
+                    Conexao.rs.last();
+
+                    Cod_Venda_Pecas = Conexao.rs.getString("idVenda_pecas");
+
+                    //Adicionar Item
+                    jTextFieldcodigovenda.setText(Cod_Venda_Pecas);
+
+                    ModItens_Pecas.setQuantidade_pecas(Float.parseFloat(jTextFieldquantidade.getText()));
+                    ModItens_Pecas.setValorvenda_pecas(Float.parseFloat(jTextFieldvalorfinal.getText()));
+                    ModItens_Pecas.setId_venda(Integer.parseInt(jTextFieldcodigovenda.getText()));
+                    ModItens_Pecas.setId_Peca(Integer.parseInt(jTextFieldCod_Peca.getText()));
+                    ModItens_Pecas.setDeconto(Float.parseFloat(jTextFielddesconto.getText()));
+                    ModItens_Pecas.setValortotal_parcial(Float.parseFloat(jTextFieldvalortotal_parcial.getText()));
+
+//                    ControlVendas_Pecas.Adicionar_Itens_VendasPecas(ModItens_Pecas);
+
+                    VendasBO.ItensVendaBO(ModItens_Pecas);
+
+                        
+                    
+                    //Baixar Estoque
+                    Baixar_Estoque();
+
+                    //Preencher campo total da venda
+                    Conexao.conexao();
+                    Conexao.executaSQL("SELECT SUM(`ValorTotal_parcial`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+                    //Valor total
+                    try {
+                        Conexao.rs.first();
+
+                        Float Total_ParcialVenda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorTotal_parcial`)"));
+                        jTextFieldvalor_venda.setText(String.valueOf(DinheiroUS.format(Total_ParcialVenda)));
+
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "Erro preenchimento total venda sem desconto! "+ex);
+                        
+                    }
+
+                    
+                    //Preencher Campo Valor Venda
+                    Conexao.conexao();
+                    Conexao.executaSQL("SELECT SUM(`ValorVenda_Pecas`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+                    try {
+                        Conexao.rs.first();
+
+                        Float Valor_Venda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorVenda_Pecas`)"));
+                        jTextFieldValor_Pagar.setText(String.valueOf(DinheiroUS.format(Valor_Venda)));
+
+                        
+                    } catch (SQLException ex4) {
+                        JOptionPane.showMessageDialog(null, "Erro preenchimento total a pagar! "+ex4);
+                    }
+
+                    
+                    //Preencher Campo Total dos descontos
+                    float Parcial = Float.parseFloat(jTextFieldvalor_venda.getText());
+//                    JOptionPane.showMessageDialog(null, Parcial);
+                    float Total = Float.parseFloat(jTextFieldValor_Pagar.getText()), Res_parcial;
+                    Res_parcial = (Parcial - Total);
+//                    JOptionPane.showMessageDialog(null, Total);
+                    jTextFieldDenconto_total.setText(String.valueOf(DinheiroUS.format(Res_parcial)));
+
+         
+                    Preencher_Tabela("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on pecas.`idPecas` = estoque.`Pecas_idPecas` where itensvenda_pecas.`Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+                    jTextFieldCod_Peca.setText("");
+                    jTextFieldNomePeca.setText("");
+                    jTextFieldquantidade.setText("1");
+                    jTextFielddesconto.setText("0");
+                    jTextFieldprecounitario.setText("");
+                    jTextFieldvalortotal_parcial.setText("");
+                    jTextFieldvalorfinal.setText("");
+                    jTextFieldDisp_Estoque.setText("");
+                    
+
+                    
+                } catch (SQLException ex5) {
+                    JOptionPane.showMessageDialog(null, "Erro ao preencher primeiro item da venda! "+ ex5);
+                }
+
+                        //Desabilitar botões venda        
+        jButtonRemover.setEnabled(true);
+        jButtonAtualizar_Item.setEnabled(true);
+
+       
+               
+        
+            }else{
+
+                ModItens_Pecas.setQuantidade_pecas(Float.parseFloat(jTextFieldquantidade.getText()));
+                ModItens_Pecas.setValorvenda_pecas(Float.parseFloat(jTextFieldvalorfinal.getText()));
+                ModItens_Pecas.setId_venda(Integer.parseInt(jTextFieldcodigovenda.getText()));
+                ModItens_Pecas.setId_Peca(Integer.parseInt(jTextFieldCod_Peca.getText()));
+                ModItens_Pecas.setDeconto(Float.parseFloat(jTextFielddesconto.getText()));
+                ModItens_Pecas.setValortotal_parcial(Float.parseFloat(jTextFieldvalortotal_parcial.getText()));
+
+//                ControlVendas_Pecas.Adicionar_Itens_VendasPecas(ModItens_Pecas);
+                VendasBO.ItensVendaBO(ModItens_Pecas);
+                
+                jButtonPesquisarActionPerformed(evt);
+                    
+                //Estoque
+                Baixar_Estoque();
+
+                //Preencher campo total da venda
+                Conexao.conexao();
+                Conexao.executaSQL("SELECT SUM(`ValorTotal_parcial`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+                try {
+                    Conexao.rs.first();
+
+                    Float Total_ParcialVenda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorTotal_parcial`)"));
+                    jTextFieldvalor_venda.setText(String.valueOf(DinheiroUS.format(Total_ParcialVenda)));
+
+                } catch (SQLException ex6) {
+                    JOptionPane.showMessageDialog(null, "Erro preenchimento total venda sem desconto! "+ ex6);
+                }
+
+                //Preencher Campo Valor Venda
+                Conexao.conexao();
+                Conexao.executaSQL("SELECT SUM(`ValorVenda_Pecas`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+                try {
+                    Conexao.rs.first();
+
+                    Float Valor_Venda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorVenda_Pecas`)"));
+//                    jTextFieldValor_Pagar.setText(String.valueOf(Valor_Venda));
+                    jTextFieldValor_Pagar.setText(String.valueOf(DinheiroUS.format(Valor_Venda)));
+
+                } catch (SQLException ex7) {
+                    JOptionPane.showMessageDialog(null, "Erro preenchimento total a pagar! "+ex7);
+                }
+
+                //Preencher Campo Total dos descontos
+                float Parcial = Float.parseFloat(jTextFieldvalor_venda.getText());
+//                JOptionPane.showMessageDialog(null, Parcial);
+                float Total = Float.parseFloat(jTextFieldValor_Pagar.getText()), Res_parcial;
+                Res_parcial = (Parcial - Total);
+//                JOptionPane.showMessageDialog(null, Total);
+                jTextFieldDenconto_total.setText(String.valueOf(DinheiroUS.format(Res_parcial)));
+
+         
+                Preencher_Tabela("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on pecas.`idPecas` = estoque.`Pecas_idPecas` where itensvenda_pecas.`Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+                jTextFieldCod_Peca.setText("");
+                jTextFieldNomePeca.setText("");
+                jTextFieldquantidade.setText("1");
+                jTextFielddesconto.setText("0");
+                jTextFieldprecounitario.setText("");
+                jTextFieldvalortotal_parcial.setText("");
+                jTextFieldvalorfinal.setText("");
+                jTextFieldDisp_Estoque.setText("");
+                
+                        //Desabilitar botões venda        
+        jButtonRemover.setEnabled(true);
+        jButtonAtualizar_Item.setEnabled(true);
+
+        
+        
+        
+                    }
+                }
+            
+    
+         
+     //Atualizar item caso já tenha sido adiconado na venda   
+    }else{
+
+                        int Estoque_disponivel=0;
+                        
+        Conexao.conexao();
+        Conexao.executaSQL("select * from estoque where Pecas_idPecas='"+jTextFieldCod_Peca.getText()+"'");
+
+        try {
+            Conexao.rs.first();
+
+            Estoque_disponivel = Conexao.rs.getInt("Quant_em_estoque");
+
+        } catch (SQLException ex2) {
+            JOptionPane.showMessageDialog(null, "Erro de estoque");
+        }
+
+        int quant_Item = Integer.parseInt(jTextFieldquantidade.getText());
+                        if(Estoque_disponivel < quant_Item){
+
+                            JOptionPane.showMessageDialog(null, "Quantidade Maior que Disponivel em Estoque!");
+                            
+                        }else{
+            String Cod_Item = null;    
+              
+            ConexaoItem.conexao();
+            
+            ConexaoItem.executaSQL("select * from itensvenda_pecas where Pecas_idPecas ='"+jTextFieldCod_Peca.getText()+"' and `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"' ");
+            
+             try {
+                 
+                    ConexaoItem.rs.first();
+              
+                    Cod_Item = ConexaoItem.rs.getString("Pecas_idPecas");
+                    
+                    if(Cod_Item != "") {
+
+                        jButtonPesquisarPecasActionPerformed(null);
+                        
+                        //Atualizar item
+                        Float Quant_Atualizar = ConexaoItem.rs.getFloat("Quantidade_pecas");
+                        Float VL_Atualizar = ConexaoItem.rs.getFloat("ValorVenda_Pecas");
+                        Float Desconto_Atualizar = ConexaoItem.rs.getFloat("desconto_pecas");
+                        Float VL_Parcial_Atualizar = ConexaoItem.rs.getFloat("ValorTotal_parcial");
+                        
+        ModItens_Pecas.setId_venda(Integer.parseInt(jTextFieldcodigovenda.getText()));
+        ModItens_Pecas.setId_Peca(Integer.parseInt(jTextFieldCod_Peca.getText()));
+
+        
+        //Itens Venda        
+        Float Quantidade = Quant_Atualizar + Float.parseFloat(jTextFieldquantidade.getText());
+        
+        Float Valor = VL_Atualizar + Float.parseFloat(jTextFieldvalorfinal.getText());
+        
+        Float Desconto = Desconto_Atualizar + Float.parseFloat(jTextFielddesconto.getText());
+        
+        Float Total_Parcial = VL_Parcial_Atualizar + Float.parseFloat(jTextFieldvalortotal_parcial.getText());
+        
+        ModItens_Pecas.setQuantidade_pecas(Quantidade);
+        ModItens_Pecas.setValorvenda_pecas(Valor);
+        ModItens_Pecas.setDeconto(Desconto);
+        ModItens_Pecas.setValortotal_parcial(Total_Parcial);
+
+        ControlVendas_Pecas.Atualizar_Adicionar_Itens_VendasPecas(ModItens_Pecas);
+
+        //Baixa Estoque
+        Baixar_Estoque();
+        
+                Conexao.conexao();
+                Conexao.executaSQL("SELECT SUM(`ValorTotal_parcial`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+                try {
+                    Conexao.rs.first();
+
+                    Float Total_ParcialVenda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorTotal_parcial`)"));
+                    jTextFieldvalor_venda.setText(String.valueOf(DinheiroUS.format(Total_ParcialVenda)));
+                    
+                    
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, "Erro preenchimento total venda sem desconto! "+ex);
+                }
+
+                
+            //Preencher Campo Valor Venda
+            Conexao.conexao();
+            Conexao.executaSQL("SELECT SUM(`ValorVenda_Pecas`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+            try {
+                Conexao.rs.first();
+
+                Float Valor_Venda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorVenda_Pecas`)"));
+//                jTextFieldValor_Pagar.setText(String.valueOf(Valor_Venda));
+
+                jTextFieldValor_Pagar.setText(String.valueOf(DinheiroUS.format(Valor_Venda)));
+                
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Erro preenchimento total a pagar! "+ex);
+            }
+           
+            
+            //Preencher Campo Valor Venda Sem Desconto
+            Conexao.conexao();
+            Conexao.executaSQL("SELECT SUM(`ValorTotal_parcial`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+            try {
+                Conexao.rs.first();
+
+                Float Valor_VendaSemDesconto = Float.parseFloat(Conexao.rs.getString("SUM(`ValorTotal_parcial`)"));
+                jTextFieldvalor_venda.setText(String.valueOf(DinheiroUS.format(Valor_VendaSemDesconto)));
+
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+
+            //Preencher Campo Total dos descontos
+            float Parcial = Float.parseFloat(jTextFieldvalor_venda.getText());
+//            JOptionPane.showMessageDialog(null, Parcial);
+            float Total = Float.parseFloat(jTextFieldValor_Pagar.getText()), Res_parcial;
+            Res_parcial = (Parcial - Total);
+//            JOptionPane.showMessageDialog(null, Total);
+            jTextFieldDenconto_total.setText(String.valueOf(DinheiroUS.format(Res_parcial)));
+
+        
+         Preencher_Tabela("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on pecas.`idPecas` = estoque.`Pecas_idPecas` where itensvenda_pecas.`Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+                
+         
+                 //Desabilitar botões venda        
+        jButtonRemover.setEnabled(true);
+        jButtonAtualizar_Item.setEnabled(true);
+
+        jTextFieldCod_Peca.setText("");
+        jTextFieldNomePeca.setText("");
+        jTextFieldprecounitario.setText("");
+        jTextFieldDisp_Estoque.setText("");
+        jTextField2.setText("");
+        jTextFieldvalortotal_parcial.setText("");
+        jTextFieldvalorfinal.setText("");
+        
+        
+        //Se não houver cód do item na venda
+                    }else{
+
+                        
+                        
+//                        JOptionPane.showMessageDialog(null, "é null");
+                    }
+                    
+                    
+                } catch (SQLException ex) {
+                    
+                    //adicionar novo item
+        
+                    int Estoque_disponivel2=0;
+        Conexao.conexao();
+        Conexao.executaSQL("select * from estoque where Pecas_idPecas='"+jTextFieldCod_Peca.getText()+"'");
+
+        try {
+            Conexao.rs.first();
+
+            Estoque_disponivel2 = Conexao.rs.getInt("Quant_em_estoque");
+
+        } catch (SQLException ex2) {
+            JOptionPane.showMessageDialog(null, "Sem produto para venda!");
+        }
+
+        int quant_Item2 = Integer.parseInt(jTextFieldquantidade.getText());
+        
+        if(Estoque_disponivel2 < quant_Item2){
+
+            JOptionPane.showMessageDialog(null, "Produto não lozalizado ou quantidade Maior que Disponivel em Estoque!.");
+
+            jTextFieldvalortotal_parcial.setText("");
+            jTextFielddesconto.setText("0");
+            jTextFieldvalorfinal.setText("");
+
+                    //Desabilitar botões venda        
+        jButtonRemover.setEnabled(true);
+        jButtonAtualizar_Item.setEnabled(true);
+        
+        
+        }else{
+           
+            if(jTextFieldcodigovenda.getText().equals("")){
+
+                String Cod_Venda_Pecas; //11/10/2016 23:06
+
+                //Data Para Sql
+                String dia = jFormattedTextFieldData_Hora.getText().substring(0,2);
+                String mes = jFormattedTextFieldData_Hora.getText().substring(3,5);
+                String ano = jFormattedTextFieldData_Hora.getText().substring(6,10);
+                String hora = jFormattedTextFieldData_Hora.getText().substring(11,13);
+                String minuto = jFormattedTextFieldData_Hora.getText().substring(14,16);
+                ModVenda_Pecas.setData_VendaPecas(ano+"-"+mes+"-"+dia+" "+hora+":"+minuto);
+
+//                JOptionPane.showMessageDialog(null, ModVenda_Pecas.getData_VendaPecas());
+
+                ModVenda_Pecas.setData_VendaPecas(ModVenda_Pecas.getData_VendaPecas());
+                ModVenda_Pecas.setIDFuncionario_Vendedor(Integer.parseInt(jTextFieldCod_Vendedor.getText()));
+                ModVenda_Pecas.setIDCliente(Integer.parseInt(jTextFieldcodigocliente.getText()));
+                ModVenda_Pecas.setTotal_Venda(Float.parseFloat(jTextFieldvalorfinal.getText()));
+                ModVenda_Pecas.setSituacao("Em Andamento");
+                
+//                ControlVendas_Pecas.IniciarVenda_Pecas(ModVenda_Pecas);
+
+                 VendasBO.IniciarVendasBO(ModVenda_Pecas);
+                 
+                 
+                Conexao.conexao();
+                Conexao.executaSQL("select * from venda_pecas");
+
+                try {
+
+                    Conexao.rs.last();
+
+                    Cod_Venda_Pecas = Conexao.rs.getString("idVenda_pecas");
+
+                    jTextFieldcodigovenda.setText(Cod_Venda_Pecas);
+
+                    ModItens_Pecas.setQuantidade_pecas(Float.parseFloat(jTextFieldquantidade.getText()));
+                    ModItens_Pecas.setValorvenda_pecas(Float.parseFloat(jTextFieldvalorfinal.getText()));
+                    ModItens_Pecas.setId_venda(Integer.parseInt(jTextFieldcodigovenda.getText()));
+                    ModItens_Pecas.setId_Peca(Integer.parseInt(jTextFieldCod_Peca.getText()));
+                    ModItens_Pecas.setDeconto(Float.parseFloat(jTextFielddesconto.getText()));
+                    ModItens_Pecas.setValortotal_parcial(Float.parseFloat(jTextFieldvalortotal_parcial.getText()));
+
+//                    ControlVendas_Pecas.Adicionar_Itens_VendasPecas(ModItens_Pecas);
+                    
+                    VendasBO.ItensVendaBO(ModItens_Pecas);
+
+                    //Estoque
+                    Baixar_Estoque();
+
+                    //Preencher campo total da venda
+                    Conexao.conexao();
+                    Conexao.executaSQL("SELECT SUM(`ValorTotal_parcial`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+                    try {
+                        Conexao.rs.first();
+
+                        Float Total_ParcialVenda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorTotal_parcial`)"));
+                        jTextFieldvalor_venda.setText(String.valueOf(DinheiroUS.format(Total_ParcialVenda)));
+
+                    } catch (SQLException ex3) {
+                        JOptionPane.showMessageDialog(null, "Erro: "+ex3);
+                    }
+
+                    //Preencher Campo Valor Venda
+                    Conexao.conexao();
+                    Conexao.executaSQL("SELECT SUM(`ValorVenda_Pecas`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+                    try {
+                        Conexao.rs.first();
+
+                        Float Valor_Venda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorVenda_Pecas`)"));
+//                        jTextFieldValor_Pagar.setText(String.valueOf(Valor_Venda));
+
+                        jTextFieldValor_Pagar.setText(String.valueOf(DinheiroUS.format(Valor_Venda)));
+                        
+                    } catch (SQLException ex4) {
+                        Logger.getLogger(JI_VendaPecas.class.getName()).log(Level.SEVERE, null, ex4);
+                    }
+
+                    //Preencher Campo Total dos descontos
+                    float Parcial = Float.parseFloat(jTextFieldvalor_venda.getText());
+//                    JOptionPane.showMessageDialog(null, Parcial);
+                    float Total = Float.parseFloat(jTextFieldValor_Pagar.getText()), Res_parcial;
+                    Res_parcial = (Parcial - Total);
+//                    JOptionPane.showMessageDialog(null, Total);
+                    jTextFieldDenconto_total.setText(String.valueOf(DinheiroUS.format(Res_parcial)));
+
+                    
+                    jButtonPesquisarActionPerformed(evt);
+                    
+                    
+                    Preencher_Tabela("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on pecas.`idPecas` = estoque.`Pecas_idPecas` where itensvenda_pecas.`Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+                    jTextFieldCod_Peca.setText("");
+                    jTextFieldNomePeca.setText("");
+                    jTextFieldquantidade.setText("1");
+                    jTextFielddesconto.setText("0");
+                    jTextFieldprecounitario.setText("");
+                    jTextFieldvalortotal_parcial.setText("");
+                    jTextFieldvalorfinal.setText("");
+                    jTextFieldDisp_Estoque.setText("");
+        
+                    
+                    
+                } catch (SQLException ex5) {
+                    Logger.getLogger(JI_VendaPecas.class.getName()).log(Level.SEVERE, null, ex5);
+                }
+
+                        //Desabilitar botões venda        
+        jButtonRemover.setEnabled(true);
+        jButtonAtualizar_Item.setEnabled(true);
+
+        
+        jTextFieldCod_Peca.setText("");
+        jTextFieldNomePeca.setText("");
+        jTextFieldprecounitario.setText("");
+        jTextFieldDisp_Estoque.setText("");
+        jTextField2.setText("");
+        jTextFieldvalortotal_parcial.setText("");
+        jTextFieldvalorfinal.setText("");
+
+                
+            }else{
+
+                ModItens_Pecas.setQuantidade_pecas(Float.parseFloat(jTextFieldquantidade.getText()));
+                ModItens_Pecas.setValorvenda_pecas(Float.parseFloat(jTextFieldvalorfinal.getText()));
+                ModItens_Pecas.setId_venda(Integer.parseInt(jTextFieldcodigovenda.getText()));
+                ModItens_Pecas.setId_Peca(Integer.parseInt(jTextFieldCod_Peca.getText()));
+                ModItens_Pecas.setDeconto(Float.parseFloat(jTextFielddesconto.getText()));
+                ModItens_Pecas.setValortotal_parcial(Float.parseFloat(jTextFieldvalortotal_parcial.getText()));
+
+//                ControlVendas_Pecas.Adicionar_Itens_VendasPecas(ModItens_Pecas);
+
+                VendasBO.ItensVendaBO(ModItens_Pecas);
+
+                //Estoque
+                Baixar_Estoque();
+
+                //Preencher campo total da venda
+                Conexao.conexao();
+                Conexao.executaSQL("SELECT SUM(`ValorTotal_parcial`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+                try {
+                    Conexao.rs.first();
+
+                    Float Total_ParcialVenda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorTotal_parcial`)"));
+                    jTextFieldvalor_venda.setText(String.valueOf(DinheiroUS.format(Total_ParcialVenda)));
+
+                } catch (SQLException ex6) {
+                    Logger.getLogger(JI_VendaPecas.class.getName()).log(Level.SEVERE, null, ex6);
+                }
+
+                //Preencher Campo Valor Venda
+                Conexao.conexao();
+                Conexao.executaSQL("SELECT SUM(`ValorVenda_Pecas`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+                try {
+                    Conexao.rs.first();
+
+                    Float Valor_Venda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorVenda_Pecas`)"));
+//                    jTextFieldValor_Pagar.setText(String.valueOf(Valor_Venda));
+
+                    jTextFieldValor_Pagar.setText(String.valueOf(DinheiroUS.format(Valor_Venda)));
+                    
+                } catch (SQLException ex7) {
+                    Logger.getLogger(JI_VendaPecas.class.getName()).log(Level.SEVERE, null, ex7);
+                }
+
+                //Preencher Campo Total dos descontos
+                float Parcial = Float.parseFloat(jTextFieldvalor_venda.getText());
+//                JOptionPane.showMessageDialog(null, Parcial);
+                float Total = Float.parseFloat(jTextFieldValor_Pagar.getText()), Res_parcial;
+                Res_parcial = (Parcial - Total);
+//                JOptionPane.showMessageDialog(null, Total);
+                jTextFieldDenconto_total.setText(String.valueOf(DinheiroUS.format(Res_parcial)));
+
+         
+                Preencher_Tabela("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on pecas.`idPecas` = estoque.`Pecas_idPecas` where itensvenda_pecas.`Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+                jTextFieldCod_Peca.setText("");
+                jTextFieldNomePeca.setText("");
+                jTextFieldquantidade.setText("1");
+                jTextFielddesconto.setText("0");
+                jTextFieldprecounitario.setText("");
+                jTextFieldvalortotal_parcial.setText("");
+                jTextFieldvalorfinal.setText("");
+                jTextFieldDisp_Estoque.setText("");
+            
+         //Desabilitar botões venda        
+        jButtonRemover.setEnabled(true);
+        jButtonAtualizar_Item.setEnabled(true);
+ 
+                 
+        jTextFieldCod_Peca.setText("");
+        jTextFieldNomePeca.setText("");
+        jTextFieldprecounitario.setText("");
+        jTextFieldDisp_Estoque.setText("");
+        jTextField2.setText("");
+        jTextFieldvalortotal_parcial.setText("");
+        jTextFieldvalorfinal.setText("");
+            
+        
+                                }
+                          }
+                    }
+
+                    
+            }
+
+      }
+            
+            
+     
+        
+                    
+                
+    }//GEN-LAST:event_jButtonAdicionarActionPerformed
+
+    private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
+        // TODO add your handling code here:
+
+
+         NumberFormat DinheiroUS = NumberFormat.getNumberInstance(localeUS);
+         DinheiroUS.setMaximumFractionDigits(2);
+        
+        
+        //Códigos 01
+        if(JOptionPane.showConfirmDialog(null, "Excluir Item", "Pergunta", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)== JOptionPane.YES_NO_OPTION){
+
+           try {
+               
+               Conexao.conexao();
+               
+               Conexao.executaSQL("SELECT * FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas`='"+jTextFieldcodigovenda.getText()+"'");
+               
+               
+               Conexao.rs.first();
+               
+               String Id_Veiculo = Conexao.rs.getString("Pecas_idPecas");
+               String Id_Venda = Conexao.rs.getString("Venda_pecas_idVenda_pecas");
+               
+               ModItens_Pecas.setId_Peca(Integer.parseInt(Id_Veiculo));
+               
+               
+               //Devolver itens ao Estoque
+               ConexaoItem.conexao();
+               ConexaoItem.executaSQL("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on estoque.`Pecas_idPecas` = itensvenda_pecas.`Pecas_idPecas` WHERE itensvenda_pecas.`Venda_pecas_idVenda_pecas`='"+Id_Venda+"' and `idPecas`='"+Id_Veiculo+"'");
+               
+               ConexaoItem.rs.first();
+               
+               int Quant_estoque = Integer.parseInt(ConexaoItem.rs.getString("Quant_em_estoque")), quant = Integer.parseInt(ConexaoItem.rs.getString("Quantidade_pecas")), res;
+               res = (Quant_estoque + quant);
+               
+               ModItens_Pecas.setQuantidade_pecas(res);
+               ControlVendas_Pecas.Devolver_ItemEstoque(ModItens_Pecas);
+
+               
+               Conexao.executaSQLupdates("delete from itensvenda_pecas where Pecas_idPecas ='"+Id_Veiculo+"' and Venda_pecas_idVenda_pecas ='"+Id_Venda+"'");
+    
+//                JOptionPane.showMessageDialog(null, "Excluido");
+                Preencher_Tabela("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on pecas.`idPecas` = estoque.`Pecas_idPecas` where itensvenda_pecas.`Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+//                JOptionPane.showMessageDialog(null, "tabela preenchida");
+            
+               
+//               JOptionPane.showMessageDialog(null, "esse Item Removido");
+    
+               jButtonPesquisarActionPerformed(evt);
+
+               try {
+                   //Loop
+                   while(Id_Veiculo != ""){
+           
+//                       JOptionPane.showMessageDialog(null, "Depois do while");
+                       
+                       Conexao.rs.next();
+                       
+                       Id_Veiculo = Conexao.rs.getString("Pecas_idPecas");
+                       Id_Venda = Conexao.rs.getString("Venda_pecas_idVenda_pecas");
+               
+                       
+//                       JOptionPane.showMessageDialog(null, Id_Veiculo);
+                       
+                       ModItens_Pecas.setId_Peca(Integer.parseInt(Id_Veiculo));
+                       
+//                       JOptionPane.showMessageDialog(null, "Mod Itens "+ModItens_Pecas.getId_Peca());
+                       
+                       
+                       //Devolver itens ao Estoque
+                       ConexaoItem.conexao();
+                       ConexaoItem.executaSQL("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on estoque.`Pecas_idPecas` = itensvenda_pecas.`Pecas_idPecas` WHERE itensvenda_pecas.`Venda_pecas_idVenda_pecas`='"+Id_Venda+"' and `idPecas`='"+Id_Veiculo+"'");
+                       
+                       ConexaoItem.rs.first();
+                       
+                       Quant_estoque = Integer.parseInt(ConexaoItem.rs.getString("Quant_em_estoque"));
+                       quant = Integer.parseInt(ConexaoItem.rs.getString("Quantidade_pecas"));
+                       res = (Quant_estoque + quant);
+                       
+                       ModItens_Pecas.setQuantidade_pecas(res);
+                       ControlVendas_Pecas.Devolver_ItemEstoque(ModItens_Pecas);
+//                       JOptionPane.showMessageDialog(null, "Item Removido");
+                
+                       
+                //Códigos 01        
+                Conexao.conexao();
+
+                Conexao.executaSQLupdates("delete from itensvenda_pecas where Pecas_idPecas ='"+jTextFieldCod_Peca.getText()+"' and Venda_pecas_idVenda_pecas ='"+jTextFieldcodigovenda.getText()+"'");
+    
+//                JOptionPane.showMessageDialog(null, "Item Excluido!");
+                Preencher_Tabela("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on pecas.`idPecas` = estoque.`Pecas_idPecas` where itensvenda_pecas.`Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+//                JOptionPane.showMessageDialog(null, "tabela preenchida");
+            
+                       
+                   }
+               
+                   
+                   //Catch Loop
+               } catch (SQLException ex)  {
+        
+                   
+               }
+               
+               
+           } catch (SQLException ex)  {
+                
+               JOptionPane.showMessageDialog(null, "Erro ao excluir item!");
+         
+                
+             }      
+         
+           
+           //Preencher valores
+               //Preencher Campo Valor Venda
+            Conexao.conexao();
+            Conexao.executaSQL("SELECT SUM(`ValorVenda_Pecas`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+try{
+            try {
+                Conexao.rs.first();
+
+                Float Valor_Venda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorVenda_Pecas`)"));
+                jTextFieldValor_Pagar.setText(String.valueOf(DinheiroUS.format(Valor_Venda)));
+
+                } catch (NullPointerException x) {
+//                JOptionPane.showMessageDialog(null, "Sem Valores");
+            }
+                
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+           
+            
+            //Preencher Campo Valor Venda Sem Desconto
+            Conexao.conexao();
+            Conexao.executaSQL("SELECT SUM(`ValorTotal_parcial`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+try{
+            try {
+                Conexao.rs.first();
+
+                Float Valor_VendaSemDesconto = Float.parseFloat(Conexao.rs.getString("SUM(`ValorTotal_parcial`)"));
+                jTextFieldvalor_venda.setText(String.valueOf(DinheiroUS.format(Valor_VendaSemDesconto)));
+
+                //Preencher Campo Total dos descontos
+            float Parcial = Float.parseFloat(jTextFieldvalor_venda.getText());
+//            JOptionPane.showMessageDialog(null, Parcial);
+            float Total = Float.parseFloat(jTextFieldValor_Pagar.getText()), Res_parcial;
+            Res_parcial = (Parcial - Total);
+//            JOptionPane.showMessageDialog(null, Total);
+            jTextFieldDenconto_total.setText(String.valueOf(DinheiroUS.format(Res_parcial)));
+            
+                
+                        } catch (NullPointerException x1) {
+//                JOptionPane.showMessageDialog(null, "Sem valores");
+            }
+
+                
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+
+            
+           
+        }
+        
+        
+/*
+        
+        
+            //Deletar Venda
+
+
+            //Preencher Campo Valor Venda
+            Conexao.conexao();
+            Conexao.executaSQL("SELECT SUM(`ValorVenda_Pecas`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+try{
+            try {
+                Conexao.rs.first();
+
+                Float Valor_Venda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorVenda_Pecas`)"));
+                jTextFieldValor_Pagar.setText(String.valueOf(Valor_Venda));
+
+                } catch (NullPointerException x) {
+                JOptionPane.showMessageDialog(null, "Sem Valores");
+            }
+                
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+           
+            
+            //Preencher Campo Valor Venda Sem Desconto
+            Conexao.conexao();
+            Conexao.executaSQL("SELECT SUM(`ValorTotal_parcial`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+try{
+            try {
+                Conexao.rs.first();
+
+                Float Valor_VendaSemDesconto = Float.parseFloat(Conexao.rs.getString("SUM(`ValorTotal_parcial`)"));
+                jTextFieldvalor_venda.setText(String.valueOf(Valor_VendaSemDesconto));
+
+                        } catch (NullPointerException x1) {
+                JOptionPane.showMessageDialog(null, "Sem valores");
+            }
+
+                
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+
+            //Preencher Campo Total dos descontos
+            float Parcial = Float.parseFloat(jTextFieldvalor_venda.getText());
+            JOptionPane.showMessageDialog(null, Parcial);
+            float Total = Float.parseFloat(jTextFieldValor_Pagar.getText()), Res_parcial;
+            Res_parcial = (Parcial - Total);
+            JOptionPane.showMessageDialog(null, Total);
+            jTextFieldDenconto_total.setText(String.valueOf(Res_parcial));
+            
+            
+            
+        }
+        
+
+        
+        
+        
+        
+/*
+        
+                //Códigos 01
+        if(JOptionPane.showConfirmDialog(null, "Excluir Item", "Pergunta", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)== JOptionPane.YES_NO_OPTION){
+
+                Conexao.conexao();
+
+                Conexao.executaSQLupdates("delete from itensvenda_pecas where Pecas_idPecas ='"+jTextFieldCod_Peca.getText()+"' and Venda_pecas_idVenda_pecas ='"+jTextFieldcodigovenda.getText()+"'");
+    
+                JOptionPane.showMessageDialog(null, "Excluido");
+                Preencher_Tabela("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on pecas.`idPecas` = estoque.`Pecas_idPecas` where itensvenda_pecas.`Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+                JOptionPane.showMessageDialog(null, "tabela preenchida");
+            
+            //Devolver Item ao Estoque
+            Conexao.conexao();
+            Conexao.executaSQL("select * from estoque where Pecas_idPecas ='"+jTextFieldCod_Peca.getText()+"'");
+            try {
+                Conexao.rs.first();
+
+                int Quant_estoque = Integer.parseInt(Conexao.rs.getString("Quant_em_estoque")), quant = Integer.parseInt(jTextFieldquantidade.getText()), res;
+                res = (Quant_estoque + quant);
+
+                ModItens_Pecas.setId_Peca(Integer.parseInt(jTextFieldCod_Peca.getText()));
+                ModItens_Pecas.setQuantidade_pecas(res);
+                ControlVendas_Pecas.Devolver_ItemEstoque(ModItens_Pecas);
+               
+                JOptionPane.showMessageDialog(null, "Item Devolvido ao Estoque"); 
+                
+                jButtonPesquisarPecasActionPerformed(evt);
+                
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Erro devolver estoque "+ex);
+            }
+
+
+            //Preencher Campo Valor Venda
+            Conexao.conexao();
+            Conexao.executaSQL("SELECT SUM(`ValorVenda_Pecas`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+try{
+            try {
+                Conexao.rs.first();
+
+                Float Valor_Venda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorVenda_Pecas`)"));
+                jTextFieldValor_Pagar.setText(String.valueOf(Valor_Venda));
+
+                } catch (NullPointerException x) {
+                JOptionPane.showMessageDialog(null, "Sem Valores");
+            }
+                
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+           
+            
+            //Preencher Campo Valor Venda Sem Desconto
+            Conexao.conexao();
+            Conexao.executaSQL("SELECT SUM(`ValorTotal_parcial`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+try{
+            try {
+                Conexao.rs.first();
+
+                Float Valor_VendaSemDesconto = Float.parseFloat(Conexao.rs.getString("SUM(`ValorTotal_parcial`)"));
+                jTextFieldvalor_venda.setText(String.valueOf(Valor_VendaSemDesconto));
+
+                        } catch (NullPointerException x1) {
+                JOptionPane.showMessageDialog(null, "Sem valores");
+            }
+
+                
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+
+            //Preencher Campo Total dos descontos
+            float Parcial = Float.parseFloat(jTextFieldvalor_venda.getText());
+            JOptionPane.showMessageDialog(null, Parcial);
+            float Total = Float.parseFloat(jTextFieldValor_Pagar.getText()), Res_parcial;
+            Res_parcial = (Parcial - Total);
+            JOptionPane.showMessageDialog(null, Total);
+            jTextFieldDenconto_total.setText(String.valueOf(Res_parcial));
+            
+            
+            
+        }
+
+*/        
+
+    }//GEN-LAST:event_jButtonRemoverActionPerformed
+
+    private void jButtonAtualizar_ItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAtualizar_ItemActionPerformed
+        // TODO add your handling code here:
+
+        ModItens_Pecas.setId_venda(Integer.parseInt(jTextFieldcodigovenda.getText()));
+        ModItens_Pecas.setId_Peca(Integer.parseInt(jTextFieldCod_Peca.getText()));
+
+        //Itens Venda
+        ModItens_Pecas.setQuantidade_pecas(Float.parseFloat(jTextFieldquantidade.getText()));
+        ModItens_Pecas.setValorvenda_pecas(Float.parseFloat(jTextFieldvalorfinal.getText()));
+        //        ModItens_Pecas.setId_venda(Integer.parseInt(jTextFieldcodigovenda.getText()));
+        //      ModItens_Pecas.setId_Peca(Integer.parseInt(jTextFieldCod_Peca.getText()));
+        ModItens_Pecas.setDeconto(Float.parseFloat(jTextFielddesconto.getText()));
+        ModItens_Pecas.setValortotal_parcial(Float.parseFloat(jTextFieldvalortotal_parcial.getText()));
+
+        ControlVendas_Pecas.Atualizar_Adicionar_Itens_VendasPecas(ModItens_Pecas);
+
+        
+        //Baixa Estoque
+        ModPesquisa_Estoque.setIdPecas_Estoque(Integer.parseInt(jTextFieldCod_Peca.getText()));
+
+        ModPesquisa_Estoque.setQuantidadePecas_Vendida(Float.parseFloat(jTextFieldquantidade.getText()));
+
+        ControlVendas_Pecas.ConsultarEstoque(ModPesquisa_Estoque);
+
+        //Preencher campo total da venda
+        Conexao.conexao();
+        Conexao.executaSQL("SELECT SUM(`ValorTotal_parcial`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+        
+        try {
+            Conexao.rs.first();
+
+            Float Total_ParcialVenda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorTotal_parcial`)"));
+            jTextFieldvalor_venda.setText(String.valueOf(Total_ParcialVenda));
+
+        } catch (SQLException ex) {
+            Logger.getLogger(JI_VendaPecas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        //Preencher Campo Valor Venda
+        Conexao.conexao();
+        Conexao.executaSQL("SELECT SUM(`ValorVenda_Pecas`) FROM itensvenda_pecas WHERE `Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+        try {
+            Conexao.rs.first();
+
+            Float Valor_Venda = Float.parseFloat(Conexao.rs.getString("SUM(`ValorVenda_Pecas`)"));
+            jTextFieldValor_Pagar.setText(String.valueOf(Valor_Venda));
+
+        } catch (SQLException ex) {
+            Logger.getLogger(JI_VendaPecas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        //Preencher Campo Total dos descontos
+        float Parcial = Float.parseFloat(jTextFieldvalor_venda.getText());
+        JOptionPane.showMessageDialog(null, Parcial);
+        float Total = Float.parseFloat(jTextFieldValor_Pagar.getText()), Res_parcial;
+        Res_parcial = (Parcial - Total);
+        JOptionPane.showMessageDialog(null, Total);
+        jTextFieldDenconto_total.setText(String.valueOf(Res_parcial));
+
+        Preencher_Tabela("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on pecas.`idPecas` = estoque.`Pecas_idPecas` where itensvenda_pecas.`Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"'");
+
+    }//GEN-LAST:event_jButtonAtualizar_ItemActionPerformed
+
+    private void jTextFieldSituacaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldSituacaoKeyPressed
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_jTextFieldSituacaoKeyPressed
+
+    private void jTextFieldSituacaoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldSituacaoKeyReleased
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_jTextFieldSituacaoKeyReleased
+
+    private void jTextFieldSituacaoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldSituacaoKeyTyped
+        // TODO add your handling code here:
+       
+        
+    }//GEN-LAST:event_jTextFieldSituacaoKeyTyped
+
+    private void jTextFieldTotal_PrazoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldTotal_PrazoKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldTotal_PrazoKeyPressed
+
+    private void jTextFieldDinheiroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldDinheiroMouseClicked
+        // TODO add your handling code here:
+        
+        NumberFormat DinheiroUS = NumberFormat.getNumberInstance(localeUS);
+        DinheiroUS.setMaximumFractionDigits(2);
+          
+        
+                          if(jTextFieldValor_Pagar.getText().equals("")){
+                
+                              
+            }else{
+                        if(jTextFieldDinheiro.getText().equals("")){
+            
+                            jTextFieldTroco.setText("");
+                            
+                        }else{
+
+                            try{
+                            
+        float VL_Pagar = Float.parseFloat(jTextFieldValor_Pagar.getText()), Dinheiro = Float.parseFloat(jTextFieldDinheiro.getText()), res;    
+        if((Dinheiro >= VL_Pagar)){
+            
+            
+        res = (Dinheiro - VL_Pagar);
+        jTextFieldTroco.setText(String.valueOf(DinheiroUS.format(res)));
+
+        
+        //jTextFieldquantidade.setEditable(false);
+        
+                
+
+        }else{
+            
+            if(Dinheiro < VL_Pagar){
+                
+                jTextFieldTroco.setText("");
+                
+            }else{
+            
+            JOptionPane.showMessageDialog(null, "Erro: Verifique os Valores!");
+            
+            jTextFieldTroco.setText("");
+            jTextFieldDinheiro.setText("");
+        
+            
+                }
+        
+        }
+        
+                            }catch(NumberFormatException e){
+            
+                                jTextFieldTroco.setText("");
+                                jTextFieldDinheiro.setText("");
+        
+                                
+             }
+    
+        }        
+                        
+    }
+        
+    }//GEN-LAST:event_jTextFieldDinheiroMouseClicked
+
+    private void jTextFieldDinheiroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDinheiroKeyTyped
+        // TODO add your handling code here:
+        
+        NumberFormat DinheiroUS = NumberFormat.getNumberInstance(localeUS);
+        DinheiroUS.setMaximumFractionDigits(2);
+        
+        
+                          if(jTextFieldValor_Pagar.getText().equals("")){
+                
+                              
+            }else{
+                        if(jTextFieldDinheiro.getText().equals("")){
+            
+                            jTextFieldTroco.setText("");
+                            
+                        }else{
+
+                            try{
+                            
+        float VL_Pagar = Float.parseFloat(jTextFieldValor_Pagar.getText()), Dinheiro = Float.parseFloat(jTextFieldDinheiro.getText()), res;    
+        if((Dinheiro >= VL_Pagar)){
+            
+            
+        res = (Dinheiro - VL_Pagar);
+        jTextFieldTroco.setText(String.valueOf(DinheiroUS.format(res)));
+
+        
+        //jTextFieldquantidade.setEditable(false);
+        
+                
+
+        }else{
+            
+            if(Dinheiro < VL_Pagar){
+         
+                jTextFieldTroco.setText("");
+                
+            }else{
+            
+            JOptionPane.showMessageDialog(null, "Erro: Verifique os Valores!");
+            
+            jTextFieldTroco.setText("");
+            jTextFieldDinheiro.setText("");
+        
+            
+                }
+        
+        }
+        
+                            }catch(NumberFormatException e){
+            
+                                jTextFieldTroco.setText("");
+                                jTextFieldDinheiro.setText("");
+        
+                                
+             }
+    
+        }        
+                        
+    }
+        
+                          
+    }//GEN-LAST:event_jTextFieldDinheiroKeyTyped
+
+    private void jTextFieldDenconto_totalPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTextFieldDenconto_totalPropertyChange
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_jTextFieldDenconto_totalPropertyChange
+
+
+    
+    public void Preencher_FormaPagamento() {
+        
+        
+            jComboBoxCondicaoPagamento.removeAllItems();            
+                            
+            jComboBoxCondicaoPagamento.addItem("A Vista");
+            jComboBoxCondicaoPagamento.addItem("Cartão de Credito");
+            jComboBoxCondicaoPagamento.addItem("A Prazo");
+                
+    }
+    
+    
+    public void Habilitar_Pagamento_Prazo() {
+        
+        //Pagamento A Prazo e Cartão
+        jTextFieldVL_Entrada.setEnabled(true);
+        jTextFieldJuros.setEnabled(true);
+        jSpinnerParcelas.setEnabled(true);
+        jTextFieldTotal_Prazo.setEnabled(true);
+        jTextFieldvalorparcelas.setEnabled(true);
+        
+//        jSpinnerdiavencimento.setEnabled(true);
+        jTextField1Parcela.setEnabled(true);
+        jTextField2Parcela.setEnabled(true);
+        jTextField3Parcela.setEnabled(true);
+        
+        jLabelvlparcelas.setEnabled(true);
+        jLabeldiadevencimento.setEnabled(true);
+        jLabel1parcela.setEnabled(true);
+        jLabel2parcela.setEnabled(true);
+        jLabel3parcela.setEnabled(true);
+        
+        jLabelTipo_Pagamento.setEnabled(true);
+        jLabelQuant_Parcelas.setEnabled(true);
+        jLabelTotal_Prazo.setEnabled(true);
+        jLabelVL_entrada.setEnabled(true);
+        jLabelJuros.setEnabled(true);
+        
+        
+    }
+    
+    public void Desabilitar_Pagamento_Prazo() {
+        
+        //Pagamento A Prazo e Cartão
+        jTextFieldVL_Entrada.setEnabled(false);
+        jTextFieldJuros.setEnabled(false);
+        jSpinnerParcelas.setEnabled(false);
+        jTextFieldTotal_Prazo.setEnabled(false);
+        jTextFieldvalorparcelas.setEnabled(false);
+        
+       // jSpinnerdiavencimento.setEnabled(false);
+        jTextField1Parcela.setEnabled(false);
+        jTextField2Parcela.setEnabled(false);
+        jTextField3Parcela.setEnabled(false);
+        
+        jLabelvlparcelas.setEnabled(false);
+        jLabeldiadevencimento.setEnabled(false);
+        jLabel1parcela.setEnabled(false);
+        jLabel2parcela.setEnabled(false);
+        jLabel3parcela.setEnabled(false);
+        
+        jLabelTipo_Pagamento.setEnabled(false);
+        jLabelQuant_Parcelas.setEnabled(false);
+        jLabelTotal_Prazo.setEnabled(false);
+        jLabelVL_entrada.setEnabled(false);
+        jLabelJuros.setEnabled(false);
+        
+    }
+    
+    
+    public void Habilitar_Pagamento_Cartao() {
+        
+        //Pagamento A Prazo e Cartão
+        jTextFieldVL_Entrada.setEnabled(true);
+        jTextFieldJuros.setEnabled(true);
+        jSpinnerParcelas.setEnabled(true);
+        jTextFieldTotal_Prazo.setEnabled(true);
+        jTextFieldvalorparcelas.setEnabled(true);
+
+        jLabelTipo_Pagamento.setEnabled(true);
+        jLabelQuant_Parcelas.setEnabled(true);
+        jLabelTotal_Prazo.setEnabled(true);
+        jLabelVL_entrada.setEnabled(true);
+        jLabelJuros.setEnabled(true);
+        jLabelvlparcelas.setEnabled(true);
+        
+    }
+    
+    
+    public void Hora_Atual_Sistema (){
+        
+    Date d = new Date();
+    
+    Locale Local = new Locale("pt","BR");
+    
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    
+    String Data = sdf.format(d);
+
+    jFormattedTextFieldData_Hora.setText(Data);
+
+        
+    }
+    
+    
+    public void Desabilitar_Pagamento_Cartao(){
+        
+        //Pagamento A Prazo e Cartão
+        jTextFieldVL_Entrada.setEnabled(false);
+        jTextFieldJuros.setEnabled(false);
+        jSpinnerParcelas.setEnabled(false);
+        jTextFieldTotal_Prazo.setEnabled(false);
+        jTextFieldvalorparcelas.setEnabled(false);
+
+        jLabelTipo_Pagamento.setEnabled(false);
+        jLabelQuant_Parcelas.setEnabled(false);
+        jLabelTotal_Prazo.setEnabled(false);
+        jLabelVL_entrada.setEnabled(false);
+        jLabelJuros.setEnabled(false);
+        jLabelvlparcelas.setEnabled(false);
+        
+    }
+    
+    
+    public void Preencher_DiaCartao (){
+        
+        
+        //    jComboBoxDiaCartao.removeAllItems();
+        //    jComboBoxDiaCartao.addItem("01");
+        //    jComboBoxDiaCartao.addItem("02");
+        //    jComboBoxDiaCartao.addItem("03");
+        //                               
+        
+        
+    }
+     
+    
+    public void Preencher_AnoCartao (){
+        
+        
+        //    jComboBoxAnoCartao.removeAllItems();
+        //    jComboBoxAnoCartao.addItem("2016");
+        //    jComboBoxAnoCartao.addItem("2017");
+        //    jComboBoxAnoCartao.addItem("2018");
+                                       
+        
+        
+    }
+    
+    
+      public void Preencher_Tabela (String sql){
+        
+        Conexao.conexao();
+        ArrayList dados = new ArrayList();
+        
+        String[] Colunas = new String[]{"Cód", "Descrição", "Quant." ,"Fabricante", "VL Unit.", "Desconto" , "VL A/Pagar"};
+    
+    
+    Conexao.executaSQL(sql);
+    
+        try {
+            Conexao.rs.first();
+            
+            do{
+                dados.add(new Object [] {Conexao.rs.getString("idPecas"),Conexao.rs.getString("nome_peca"),Conexao.rs.getString("Quantidade_pecas"),Conexao.rs.getString("fabricante_pecas_idfabricante_pecas"), Conexao.rs.getString("Valor_venda_unitario"), Conexao.rs.getString("desconto_pecas"), Conexao.rs.getString("ValorVenda_Pecas")});
+            }while (Conexao.rs.next()); 
+                          
+            } catch (Exception ex) {
+//             JOptionPane.showMessageDialog(null, "Erro tabela "+ex);
+        }
+                
+        ModeloTabela modelo = new ModeloTabela(dados,Colunas);
+       
+        
+        jTabletabelaItensVenda.setModel(modelo);
+        
+        jTabletabelaItensVenda.getColumnModel().getColumn(0).setPreferredWidth(90);
+        jTabletabelaItensVenda.getColumnModel().getColumn(0).setResizable(false);
+        jTabletabelaItensVenda.getColumnModel().getColumn(1).setPreferredWidth(300);
+        jTabletabelaItensVenda.getColumnModel().getColumn(1).setResizable(false);
+        jTabletabelaItensVenda.getColumnModel().getColumn(2).setPreferredWidth(80);
+        jTabletabelaItensVenda.getColumnModel().getColumn(2).setResizable(false);
+        jTabletabelaItensVenda.getColumnModel().getColumn(3).setPreferredWidth(140);
+        jTabletabelaItensVenda.getColumnModel().getColumn(3).setResizable(false);
+        jTabletabelaItensVenda.getColumnModel().getColumn(4).setPreferredWidth(75);
+        jTabletabelaItensVenda.getColumnModel().getColumn(4).setResizable(false);
+        jTabletabelaItensVenda.getColumnModel().getColumn(5).setPreferredWidth(75);
+        jTabletabelaItensVenda.getColumnModel().getColumn(5).setResizable(false);
+        jTabletabelaItensVenda.getColumnModel().getColumn(6).setPreferredWidth(75);
+        jTabletabelaItensVenda.getColumnModel().getColumn(6).setResizable(false);
+        
+        
+        jTabletabelaItensVenda.setAutoResizeMode(jTabletabelaItensVenda.AUTO_RESIZE_OFF);
+        jTabletabelaItensVenda.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        Conexao.desconecta();
+        
+        
+    }
+      
+      
+
+      
+   
+      public void Valores_Tabela (){
+          
+          String Cod_Tabela;         
+          int Selecao = jTabletabelaItensVenda.getSelectedRow();
+          Cod_Tabela = jTabletabelaItensVenda.getModel().getValueAt(Selecao,0).toString();
+         // jTextFieldplaca.setText(jTabletabelaItensVenda.getModel().getValueAt(Selecao, ));
+          
+//         JOptionPane.showMessageDialog(null, Cod_Tabela);
+         
+         
+          Conexao.conexao();
+          
+          Conexao.executaSQL("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` inner join estoque on pecas.`idPecas` = estoque.`Pecas_idPecas` WHERE itensvenda_pecas.`Pecas_idPecas` ='"+Cod_Tabela+"' and itensvenda_pecas.`Venda_pecas_idVenda_pecas`='"+jTextFieldcodigovenda.getText()+"'");
+          
+        try {
+            Conexao.rs.first();
+            
+            jTextFieldCod_Peca.setText(Conexao.rs.getString("idPecas"));
+            jTextFieldNomePeca.setText(Conexao.rs.getString("nome_peca"));
+            jTextFieldprecounitario.setText(Conexao.rs.getString("Valor_venda_unitario"));
+            jTextFieldquantidade.setText(Conexao.rs.getString("Quantidade_pecas"));
+            jTextFielddesconto.setText(Conexao.rs.getString("desconto_pecas"));
+            jTextFieldvalortotal_parcial.setText(Conexao.rs.getString("ValorTotal_parcial"));
+            jTextFieldvalorfinal.setText(Conexao.rs.getString("ValorVenda_Pecas"));
+            jTextField2.setText(Conexao.rs.getString("Cod_Barras"));
+            jTextFieldDisp_Estoque.setText(Conexao.rs.getString("Quant_em_estoque"));
+
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Venda Sem Itens!");
+        }
+          
+      Conexao.desconecta();
+        
+      }
+    
+    
+      public void Valores_TabelaPrecos (){
+          
+          float VL_1,VL_2,VL_3,VL_4,VL_5;
+          
+          String Cod_VendaTabela;         
+          int Selecao = jTabletabelaItensVenda.getSelectedRow();
+          Cod_VendaTabela = jTextFieldcodigovenda.getText();
+         // jTextFieldplaca.setText(jTabletabelaItensVenda.getModel().getValueAt(Selecao, ));
+          
+          Conexao.conexao();
+          
+          Conexao.executaSQL("SELECT * FROM itensvenda_pecas inner join pecas on itensvenda_pecas.`Pecas_idPecas` = pecas.`idPecas` where itensvenda_pecas.`Venda_pecas_idVenda_pecas` ='"+jTextFieldcodigovenda.getText()+"' AND `Pecas_idPecas`='"+Cod_VendaTabela+"' ");
+          
+        try {
+            Conexao.rs.first();
+            
+            jTextFieldvalor_venda.setText(Conexao.rs.getString("Valor_Venda"));
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(JI_VendaPecas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+          
+      Conexao.desconecta();
+        
+      }
+      
+           
+      
+              public void Valores_TabelaPesquisa (){
+          
+          int Cod_Tabela;         
+          int Selecao = jTablePesquisaClientes.getSelectedRow();
+          Cod_Tabela = Integer.parseInt(jTablePesquisaClientes.getModel().getValueAt(Selecao,0).toString());
+         // jTextFieldplaca.setText(jTabletabelaItensVenda.getModel().getValueAt(Selecao, ));
+          ModCliente.setPesquisa_Cliente(Cod_Tabela);
+     
+        JOptionPane.showMessageDialog(null, ModCliente.getPesquisa_Cliente());
+        
+        jTextFieldcodigocliente.setText(String.valueOf(ModCliente.getPesquisa_Cliente()));
+          
+    }
+
+// Variables declaration - do not modify                     
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTablePesquisaClientes;
+    // End of variables declaration
+      
+      private void jTablePesquisaClientesMouseClicked(java.awt.event.MouseEvent evt) {                                                    
+        // TODO add your handling code here:
+      
+        Valores_TabelaPesquisa();
+    
+        jTextFieldcodigocliente.setText(ModCliente.getNome_PesquisaTabela());
+
+      }      
+      
+      
+      
+      //Baixa no estoque      
+      public void Baixar_Estoque(){
+        int Quant_estoque, res_estoque, Quant_venda = Integer.parseInt(jTextFieldquantidade.getText());
+        Conexao.conexao();
+        Conexao.executaSQL("select * from estoque where Pecas_idPecas='"+jTextFieldCod_Peca.getText()+"'");
+        try {
+        Conexao.rs.first();
+        
+        
+        Quant_estoque = Conexao.rs.getInt("Quant_em_estoque");
+        
+//        JOptionPane.showMessageDialog(null, "Quant. "+Quant_estoque);
+        
+        res_estoque = Quant_estoque - Quant_venda;
+        
+//        JOptionPane.showMessageDialog(null, "Estoque. "+res_estoque);
+        
+        //Atualizar Estoque        
+        ModPecas.setId_pecas(Integer.parseInt(jTextFieldCod_Peca.getText()));
+        ModEstoque2.setQuantidade_em_Estoque(res_estoque);
+        ControlVendas_Pecas.Atualizar_EstoquePecas(ModPecas, ModEstoque2);
+        
+         jButtonPesquisarPecasActionPerformed(null);
+        
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao baixar estoque!");
+        }
+        
+      }
+
+            public void Devolver_Estoque(){
+        int Quant_estoque, res_estoque, Quant_venda = Integer.parseInt(jTextFieldquantidade.getText());
+        Conexao.conexao();
+        Conexao.executaSQL("select * from estoque where Pecas_idPecas='"+jTextFieldCod_Peca.getText()+"'");
+        try {
+        Conexao.rs.first();
+        
+        Quant_estoque = Conexao.rs.getInt("Quant_em_estoque");
+        
+//        JOptionPane.showMessageDialog(null, "Quant. "+Quant_estoque);
+        
+        res_estoque = Quant_estoque + Quant_venda;
+        
+//        JOptionPane.showMessageDialog(null, "Estoque. "+res_estoque);
+        
+        //Atualizar Estoque        
+        ModPecas.setId_pecas(Integer.parseInt(jTextFieldCod_Peca.getText()));
+        ModEstoque2.setQuantidade_em_Estoque(res_estoque);
+        ControlVendas_Pecas.Atualizar_EstoquePecas(ModPecas, ModEstoque2);
+        
+        
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao deveolver para o estoque!");
+        }
+        
+      }
+       
+
+      
+
+      public void Verificar_Estoque (int Estoque_disponivel){
+        
+        Conexao.conexao();
+        Conexao.executaSQL("select * from pecas where idPecas='"+jTextFieldCod_Peca.getText()+"'");
+        
+        try {
+            Conexao.rs.first();
+            
+            Estoque_disponivel = Conexao.rs.getInt("quantidade_pecas");
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(JI_VendaPecas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      }
+       
+         
+      
+     //Tela De Pesquisa Cliente
+    public class Frm_ClientePesquisa extends javax.swing.JFrame {
+
+    Conecta_Banco Conexao = new Conecta_Banco();
+    
+    Cadastro_ClienteVO ModCliente = new Cadastro_ClienteVO();
+    
+//    JI_VendaPecas Cliente = new JI_VendaPecas();
+   
+    String Nome_Clientem;
+    
+    int Código_Tabela;
+    
+    /**
+     * Creates new form Frm_PesquisaCliente
+     */
+    public Frm_ClientePesquisa() {
+        initComponents();
+        //Frm_Cliente Cliente_Nome = new Frm_Cliente();
+        
+        //PreencherTabela_PesquisaCliente("select * from cadastro_cliente where nome_cliente like '%"+ModCliente.getNome_PesquisaTabela()+"%'");
+    
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    private void initComponents() {
+
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTablePesquisaClientes = new javax.swing.JTable();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Pesquisa Clientes");
+        setLocationByPlatform(true);
+        setMaximumSize(new java.awt.Dimension(600, 350));
+        setMinimumSize(new java.awt.Dimension(600, 350));
+        setResizable(false);
+        setSize(new java.awt.Dimension(600, 350));
+
+        jTablePesquisaClientes.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jTablePesquisaClientes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jTablePesquisaClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTablePesquisaClientesMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jTablePesquisaClientes);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        pack();
+    }// </editor-fold>                        
+
+    private void jTablePesquisaClientesMouseClicked(java.awt.event.MouseEvent evt) {                                                    
+        // TODO add your handling code here:
+
+        
+        Valores_TabelaPesquisa();
+    
+        jTextFieldcodigocliente.setText(String.valueOf(ModCliente.getPesquisa_Cliente()));
+               
+       
+        jButtonPesquisaClienteActionPerformed(null);
+        
+    }                                                 
+
+    
+    
+  
+    
+    public void PreencherTabela_PesquisaCliente (String sql){
+        
+        Conexao.conexao();
+        ArrayList dados = new ArrayList();
+        
+        String[] Colunas = new String[]{"Código", "Nome", "CPF"};
+    
+    
+    Conexao.executaSQL(sql);
+    
+        try {
+            Conexao.rs.first();
+            
+            do{
+                dados.add(new Object [] {Conexao.rs.getString("idCadastro_cliente"),Conexao.rs.getString("nome_cliente"), Conexao.rs.getString("cpf")});
+            }while (Conexao.rs.next()); 
+                          
+            } catch (Exception ex) {
+             JOptionPane.showMessageDialog(null, "Erro no preenchimento do Array List "+ex);
+        }
+                
+        ModeloTabela modelo = new ModeloTabela(dados,Colunas);
+       
+        
+        jTablePesquisaClientes.setModel(modelo);
+        
+        jTablePesquisaClientes.getColumnModel().getColumn(0).setPreferredWidth(100);
+        jTablePesquisaClientes.getColumnModel().getColumn(0).setResizable(false);
+        jTablePesquisaClientes.getColumnModel().getColumn(1).setPreferredWidth(320);
+        jTablePesquisaClientes.getColumnModel().getColumn(1).setResizable(false);
+        jTablePesquisaClientes.getColumnModel().getColumn(2).setPreferredWidth(155);
+        jTablePesquisaClientes.getColumnModel().getColumn(2).setResizable(false);
+        
+        jTablePesquisaClientes.setAutoResizeMode(jTablePesquisaClientes.AUTO_RESIZE_OFF);
+        jTablePesquisaClientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        Conexao.desconecta();
+    
+        
+    }  
+    
+    
+    public void Valores_TabelaPesquisa (){
+          
+          int Cod_Tabela;         
+          int Selecao = jTablePesquisaClientes.getSelectedRow();
+          Cod_Tabela = Integer.parseInt(jTablePesquisaClientes.getModel().getValueAt(Selecao,0).toString());
+         // jTextFieldplaca.setText(jTabletabelaItensVenda.getModel().getValueAt(Selecao, ));
+          ModCliente.setPesquisa_Cliente(Cod_Tabela);
+     
+//        JOptionPane.showMessageDialog(null, ModCliente.getPesquisa_Cliente());
+          
+    }
+       
+    
+
+    // Variables declaration - do not modify                     
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTablePesquisaClientes;
+    // End of variables declaration                   
+}    
+      
+    
+    //Tela De Pesquisa Produto
+    public class Frm_ProdutoPesquisa extends javax.swing.JFrame {
+
+    Conecta_Banco Conexao = new Conecta_Banco();
+    
+    SCadastro_PecasVO ModPecas = new SCadastro_PecasVO();
+    
+//    JI_VendaPecas Cliente = new JI_VendaPecas();
+   
+    String Nome_Clientem;
+    
+    int Código_Produto;
+    
+    /**
+     * Creates new form Frm_PesquisaCliente
+     */
+    public Frm_ProdutoPesquisa() {
+        initComponents();
+        //Frm_Cliente Cliente_Nome = new Frm_Cliente();
+        
+        //PreencherTabela_PesquisaCliente("select * from cadastro_cliente where nome_cliente like '%"+ModCliente.getNome_PesquisaTabela()+"%'");
+    
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    private void initComponents() {
+
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTablePesquisaClientes = new javax.swing.JTable();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Pesquisa Clientes");
+        setLocationByPlatform(true);
+        setMaximumSize(new java.awt.Dimension(600, 350));
+        setMinimumSize(new java.awt.Dimension(600, 350));
+        setResizable(false);
+        setSize(new java.awt.Dimension(600, 350));
+
+        jTablePesquisaClientes.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jTablePesquisaClientes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jTablePesquisaClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTablePesquisaClientesMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jTablePesquisaClientes);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        pack();
+    }// </editor-fold>                        
+
+    private void jTablePesquisaClientesMouseClicked(java.awt.event.MouseEvent evt) {                                                    
+        // TODO add your handling code here:
+
+        
+        Valores_TabelaPesquisa();
+    
+        jTextFieldCod_Peca.setText(String.valueOf(ModPecas.getId_pecas()));
+               
+       
+        jButtonPesquisarPecasActionPerformed(null);
+        
+    }                                                 
+
+    
+    
+  
+    
+    public void PreencherTabela_PesquisaProduto (String sql){
+        
+        Conexao.conexao();
+        ArrayList dados = new ArrayList();
+        
+        String[] Colunas = new String[]{"Código", "Nome", "Estoque"};
+    
+    
+    Conexao.executaSQL(sql);
+    
+        try {
+            Conexao.rs.first();
+            
+            do{
+                dados.add(new Object [] {Conexao.rs.getString("idPecas"),Conexao.rs.getString("nome_peca"), Conexao.rs.getString("Quant_em_estoque")});
+            }while (Conexao.rs.next()); 
+                          
+            } catch (Exception ex) {
+             JOptionPane.showMessageDialog(null, "Erro no preenchimento do Array List "+ex);
+        }
+                
+        ModeloTabela modelo = new ModeloTabela(dados,Colunas);
+       
+        
+        jTablePesquisaClientes.setModel(modelo);
+        
+        jTablePesquisaClientes.getColumnModel().getColumn(0).setPreferredWidth(100);
+        jTablePesquisaClientes.getColumnModel().getColumn(0).setResizable(false);
+        jTablePesquisaClientes.getColumnModel().getColumn(1).setPreferredWidth(320);
+        jTablePesquisaClientes.getColumnModel().getColumn(1).setResizable(false);
+        jTablePesquisaClientes.getColumnModel().getColumn(2).setPreferredWidth(155);
+        jTablePesquisaClientes.getColumnModel().getColumn(2).setResizable(false);
+        
+        jTablePesquisaClientes.setAutoResizeMode(jTablePesquisaClientes.AUTO_RESIZE_OFF);
+        jTablePesquisaClientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        Conexao.desconecta();
+    
+        
+    }  
+    
+    
+    public void Valores_TabelaPesquisa (){
+          
+          int Cod_Produto;         
+          int Selecao = jTablePesquisaClientes.getSelectedRow();
+          Cod_Produto = Integer.parseInt(jTablePesquisaClientes.getModel().getValueAt(Selecao,0).toString());
+         // jTextFieldplaca.setText(jTabletabelaItensVenda.getModel().getValueAt(Selecao, ));
+          ModPecas.setId_pecas(Cod_Produto);
+     
+//        JOptionPane.showMessageDialog(null, ModPecas.getId_pecas());
+          
+    }
+       
+    
+
+    // Variables declaration - do not modify                     
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTablePesquisaClientes;
+    // End of variables declaration                   
+}    
+    
+
+public void Identificar_Vendedor (){
+    
+    Conexao.conexao();
+    Conexao.executaSQL("SELECT * FROM login where `Nome_acesso` ='"+jLabelUser.getText()+"'");
+        try {
+            Conexao.rs.first();
+            
+            jTextFieldCod_Vendedor.setText(String.valueOf(Conexao.rs.getString("Funcionario_Dados_idFuncionario")));
+            
+            jButtonPesquisa_VendedorActionPerformed(null);
+            
+            jTextFieldCod_Vendedor.setEnabled(false);
+            jButtonPesquisa_Vendedor.setEnabled(false);
+            jTextFieldNome_Vendedor.setEnabled(false);
+            
+            
+                
+        } catch (SQLException ex) {
+
+            JOptionPane.showMessageDialog(null, "ID do Vendedor Não Localizado!");
+
+        }
+    
+}
+
+public void Cliente_Inicial (){
+    
+    jTextFieldcodigocliente.setText("1");
+    jButtonPesquisaClienteActionPerformed(null);
+}
+    
+
+public void Consultar_VL (){
+    
+    Conexao.conexao();
+    Conexao.executaSQL("select * from venda_pecas");
+        try {
+            Conexao.rs.last();
+       
+            Res = (Float.parseFloat(Conexao.rs.getString("Total_Liquido")));
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(JI_ContasReceber.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+}
+
+
+public void Iniciar_ClientesDiversos(){
+    
+    Conexao.conexao();
+    
+    
+try {
+        
+            
+            Conexao.executaSQL("SELECT * FROM cadastro_cliente");
+        
+            
+            if(Conexao.rs.first()){
+                
+                
+            }else{
+            
+  
+            PreparedStatement pstIniciar = Conexao.conn.prepareStatement("INSERT INTO lojaautomoveis.cadastro_cliente (nome_cliente, cpf, rg, data_emissao_rg, data_nascimento, nome_pai, nome_mae, `Estado_civil_idEstado_civil`, sexo_idsexo, `Orgao_emissor_idOrgao_emissor`) \n" +
+                    "	VALUES ('Clientes Diversos', 'Sem Aplicação', 'Sem Aplicação', 'S/Data', 'S/Data', 'Sem Aplicação', 'Sem Aplicação', 1, 1, 1)");
+  
+            pstIniciar.execute();
+            
+            }
+        
+        } catch (SQLException ex) {
+            
+            JOptionPane.showMessageDialog(null, "Problema de Inicialização!"+ "Vendas/Clientes Diversos");
+        
+        }
+    
+}
+
+    
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonAdicionar;
+    private javax.swing.JButton jButtonAnterior;
+    private javax.swing.JButton jButtonAtualizar_Item;
+    private javax.swing.JButton jButtonAtualizar_Registro;
+    private javax.swing.JButton jButtonEntrar_sair_Modo_Pesquisa;
+    private javax.swing.JButton jButtonExcluir;
+    private javax.swing.JButton jButtonFinalizar_Venda;
+    private javax.swing.JButton jButtonLimpar;
+    private javax.swing.JButton jButtonNovo;
+    private javax.swing.JButton jButtonPesquisaCliente;
+    private javax.swing.JButton jButtonPesquisaCliente1;
+    private javax.swing.JButton jButtonPesquisa_Vendedor;
+    private javax.swing.JButton jButtonPesquisar;
+    private javax.swing.JButton jButtonPesquisarPecas;
+    private javax.swing.JButton jButtonPesquisarPecas1;
+    private javax.swing.JButton jButtonProximo;
+    private javax.swing.JButton jButtonRemover;
+    private javax.swing.JButton jButtonSair;
+    private javax.swing.JComboBox jComboBoxCondicaoPagamento;
+    private javax.swing.JFormattedTextField jFormattedTextFieldData_Hora;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel1parcela;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel29;
+    private javax.swing.JLabel jLabel2parcela;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel3parcela;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelJuros;
+    private javax.swing.JLabel jLabelQuant_Parcelas;
+    private javax.swing.JLabel jLabelTipo_Pagamento;
+    private javax.swing.JLabel jLabelTotal_Prazo;
+    private javax.swing.JLabel jLabelUser;
+    private javax.swing.JLabel jLabelVL_entrada;
+    private javax.swing.JLabel jLabeldiadevencimento;
+    private javax.swing.JLabel jLabelvlparcelas;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
+    private javax.swing.JPanel jPanelPrazo;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JSpinner jSpinnerParcelas;
+    private javax.swing.JTable jTabletabelaItensVenda;
+    private javax.swing.JTextField jTextField1Parcela;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField2Parcela;
+    private javax.swing.JTextField jTextField3Parcela;
+    private javax.swing.JTextField jTextFieldCod_Peca;
+    private javax.swing.JTextField jTextFieldCod_Vendedor;
+    private javax.swing.JTextField jTextFieldDenconto_total;
+    private javax.swing.JTextField jTextFieldDinheiro;
+    private javax.swing.JTextField jTextFieldDisp_Estoque;
+    private javax.swing.JTextField jTextFieldJuros;
+    private javax.swing.JTextField jTextFieldNomePeca;
+    private javax.swing.JTextField jTextFieldNome_Vendedor;
+    private javax.swing.JTextField jTextFieldSituacao;
+    private javax.swing.JTextField jTextFieldTotal_Prazo;
+    private javax.swing.JTextField jTextFieldTroco;
+    private javax.swing.JTextField jTextFieldVL_Entrada;
+    private javax.swing.JTextField jTextFieldValor_Pagar;
+    private javax.swing.JTextField jTextFieldcodigocliente;
+    private javax.swing.JTextField jTextFieldcodigovenda;
+    private javax.swing.JTextField jTextFieldcpfcliente;
+    private javax.swing.JTextField jTextFielddesconto;
+    private javax.swing.JTextField jTextFieldnomecliente;
+    private javax.swing.JTextField jTextFieldprecounitario;
+    private javax.swing.JTextField jTextFieldquantidade;
+    private javax.swing.JTextField jTextFieldvalor_venda;
+    private javax.swing.JTextField jTextFieldvalorfinal;
+    private javax.swing.JTextField jTextFieldvalorparcelas;
+    private javax.swing.JTextField jTextFieldvalortotal_parcial;
+    // End of variables declaration//GEN-END:variables
+
+    
+}
